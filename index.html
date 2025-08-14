@@ -1,0 +1,3288 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sistem Pencatatan Reward Sekolah</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <!-- Sidebar -->
+    <div class="flex h-screen bg-gray-100 relative">
+        <!-- Mobile Overlay -->
+        <div id="mobileOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden lg:hidden"></div>
+        
+        <!-- Left Sidebar -->
+        <div id="sidebar" class="fixed lg:relative w-64 bg-white shadow-lg transition-all duration-300 ease-in-out z-50 h-full -translate-x-full lg:translate-x-0">
+            <!-- Logo/Header -->
+            <div class="p-4 lg:p-6 border-b border-gray-200 flex items-center justify-between">
+                <div id="logoText">
+                    <h1 class="text-lg lg:text-xl font-bold text-gray-800">Reward dan Bobot</h1>
+                    <p class="text-xs lg:text-sm text-gray-600">SMAN 1 Angkinang</p>
+                </div>
+                <button id="sidebarToggle" class="p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200">
+                    <svg id="toggleIcon" class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Navigation Menu -->
+            <nav class="mt-4 lg:mt-6">
+                <div class="px-3 lg:px-4 space-y-2">
+                    <button id="rewardPageBtn" class="w-full flex items-center px-3 lg:px-4 py-2 lg:py-3 text-left text-blue-600 bg-blue-50 rounded-lg transition duration-200 group">
+                        <svg class="w-4 lg:w-5 h-4 lg:h-5 mr-2 lg:mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+                        </svg>
+                        <span class="font-medium menu-text text-sm lg:text-base">Dashboard</span>
+                    </button>
+                    
+                    <button id="studentDbPageBtn" class="w-full flex items-center px-3 lg:px-4 py-2 lg:py-3 text-left text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition duration-200 group">
+                        <svg class="w-4 lg:w-5 h-4 lg:h-5 mr-2 lg:mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                        </svg>
+                        <span class="font-medium menu-text text-sm lg:text-base">Database Siswa</span>
+                    </button>
+                    
+                    <button id="rewardDbPageBtn" class="w-full flex items-center px-3 lg:px-4 py-2 lg:py-3 text-left text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition duration-200 group">
+                        <svg class="w-4 lg:w-5 h-4 lg:h-5 mr-2 lg:mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 011-1h1a2 2 0 011 1v1m-4 0h4m-4 0a2 2 0 00-2 2v1a2 2 0 002 2h1m-1 0h4"></path>
+                        </svg>
+                        <span class="font-medium menu-text text-sm lg:text-base">Database RB</span>
+                    </button>
+                    
+                    <button id="analyticsPageBtn" class="w-full flex items-center px-3 lg:px-4 py-2 lg:py-3 text-left text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition duration-200 group">
+                        <svg class="w-4 lg:w-5 h-4 lg:h-5 mr-2 lg:mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                        <span class="font-medium menu-text text-sm lg:text-base">Analisis</span>
+                    </button>
+                    
+                    <button id="reportsPageBtn" class="w-full flex items-center px-3 lg:px-4 py-2 lg:py-3 text-left text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition duration-200 group">
+                        <svg class="w-4 lg:w-5 h-4 lg:h-5 mr-2 lg:mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        <span class="font-medium menu-text text-sm lg:text-base">Laporan</span>
+                    </button>
+                </div>
+                
+                <!-- Additional Menu Items -->
+                <div class="mt-6 lg:mt-8 px-3 lg:px-4">
+                    <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 menu-text">Pengaturan</h3>
+                    <div class="space-y-2">
+                        <button class="w-full flex items-center px-3 lg:px-4 py-2 lg:py-3 text-left text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition duration-200 group">
+                            <svg class="w-4 lg:w-5 h-4 lg:h-5 mr-2 lg:mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            <span class="font-medium menu-text text-sm lg:text-base">Pengaturan</span>
+                        </button>
+                        
+                        <button class="w-full flex items-center px-3 lg:px-4 py-2 lg:py-3 text-left text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition duration-200 group">
+                            <svg class="w-4 lg:w-5 h-4 lg:h-5 mr-2 lg:mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span class="font-medium menu-text text-sm lg:text-base">Bantuan</span>
+                        </button>
+                    </div>
+                </div>
+            </nav>
+            
+            <!-- User Profile Section -->
+            <div class="absolute bottom-0 w-64 p-3 lg:p-4 border-t border-gray-200 bg-white transition-all duration-300">
+                <div class="flex items-center">
+                    <div class="w-8 lg:w-10 h-8 lg:h-10 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                        <svg class="w-4 lg:w-6 h-4 lg:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-2 lg:ml-3 menu-text">
+                        <p class="text-xs lg:text-sm font-medium text-gray-700">Admin</p>
+                        <p class="text-xs text-gray-500">Administrator</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content Area -->
+        <div class="flex-1 overflow-hidden lg:ml-0">
+            <!-- Top Header Bar -->
+            <header class="bg-white shadow-sm border-b border-gray-200 px-4 lg:px-6 py-3 lg:py-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <!-- Mobile Menu Button -->
+                        <button id="mobileMenuBtn" class="lg:hidden p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg mr-3">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            </svg>
+                        </button>
+                        <h2 id="pageTitle" class="text-lg lg:text-2xl font-semibold text-gray-800">Dashboard</h2>
+                    </div>
+                    <div class="flex items-center space-x-2 lg:space-x-4">
+                        <button class="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 hidden sm:block">
+                            <svg class="w-4 lg:w-5 h-4 lg:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5zM4 19h6v-2H4v2zM4 15h8v-2H4v2zM4 11h10V9H4v2zM4 7h12V5H4v2z"></path>
+                            </svg>
+                        </button>
+                        <button class="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 hidden sm:block">
+                            <svg class="w-4 lg:w-5 h-4 lg:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Scrollable Content -->
+            <div class="h-full overflow-y-auto bg-gray-50">
+
+    <!-- Reward System Page -->
+    <div id="rewardPage" class="p-3 lg:p-6">
+        <!-- Form Input -->
+        <div class="bg-white rounded-xl shadow-lg p-4 lg:p-6 mb-6 lg:mb-8 border border-gray-200">
+            <h2 class="text-lg lg:text-xl font-semibold text-gray-800 mb-4 lg:mb-6 flex items-center">
+                <svg class="w-4 lg:w-5 h-4 lg:h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                Pencatatan Reward dan Bobot
+            </h2>
+            
+            <form id="studentForm" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 lg:gap-4">
+                <div>
+                    <label class="block text-xs lg:text-sm font-medium text-gray-700 mb-1 lg:mb-2">Nama Siswa</label>
+                    <select id="studentName" class="w-full px-3 lg:px-4 py-2 text-sm lg:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                        <option value="">Pilih Siswa</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-xs lg:text-sm font-medium text-gray-700 mb-1 lg:mb-2">Kelas</label>
+                    <select id="studentClass" class="w-full px-3 lg:px-4 py-2 text-sm lg:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                        <option value="">Pilih Kelas</option>
+                        <option value="X-1">X-1</option>
+                        <option value="X-2">X-2</option>
+                        <option value="X-3">X-3</option>
+                        <option value="XI-1">XI-1</option>
+                        <option value="XI-2">XI-2</option>
+                        <option value="XI-3">XI-3</option>
+                        <option value="XII-1">XII-1</option>
+                        <option value="XII-2">XII-2</option>
+                        <option value="XII-3">XII-3</option>
+                        <option value="XII-4">XII-4</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-xs lg:text-sm font-medium text-gray-700 mb-1 lg:mb-2">Jenis Reward</label>
+                    <select id="rewardType" class="w-full px-3 lg:px-4 py-2 text-sm lg:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                        <option value="">Pilih Jenis</option>
+                        <option value="Prestasi Akademik" data-points="10">Prestasi Akademik (+10)</option>
+                        <option value="Prestasi Olahraga" data-points="8">Prestasi Olahraga (+8)</option>
+                        <option value="Prestasi Seni" data-points="8">Prestasi Seni (+8)</option>
+                        <option value="Kedisiplinan" data-points="5">Kedisiplinan (+5)</option>
+                        <option value="Kebersihan" data-points="3">Kebersihan (+3)</option>
+                        <option value="Pelanggaran" data-points="-5">Pelanggaran (-5)</option>
+                        <option value="Terlambat" data-points="-2">Terlambat (-2)</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-xs lg:text-sm font-medium text-gray-700 mb-1 lg:mb-2">Tanggal</label>
+                    <input type="date" id="rewardDate" class="w-full px-3 lg:px-4 py-2 text-sm lg:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                </div>
+                
+                <div class="flex items-end sm:col-span-2 lg:col-span-1">
+                    <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-3 lg:px-4 text-sm lg:text-base rounded-lg transition duration-200 flex items-center justify-center">
+                        <svg class="w-3 lg:w-4 h-3 lg:h-4 mr-1 lg:mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Tambah Data
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 mb-6 lg:mb-8">
+            <div class="bg-gradient-to-r from-green-400 to-green-600 rounded-xl p-4 lg:p-6 text-white">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-green-100 text-xs lg:text-sm">Total Poin Positif</p>
+                        <p id="totalPositive" class="text-xl lg:text-2xl font-bold">0</p>
+                    </div>
+                    <div class="bg-white bg-opacity-20 p-2 lg:p-3 rounded-lg">
+                        <svg class="w-5 lg:w-6 h-5 lg:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-gradient-to-r from-red-400 to-red-600 rounded-xl p-4 lg:p-6 text-white">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-red-100 text-xs lg:text-sm">Total Poin Negatif</p>
+                        <p id="totalNegative" class="text-xl lg:text-2xl font-bold">0</p>
+                    </div>
+                    <div class="bg-white bg-opacity-20 p-2 lg:p-3 rounded-lg">
+                        <svg class="w-5 lg:w-6 h-5 lg:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-gradient-to-r from-blue-400 to-blue-600 rounded-xl p-4 lg:p-6 text-white sm:col-span-2 lg:col-span-1">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-blue-100 text-xs lg:text-sm">Rata-rata Poin</p>
+                        <p id="averagePoints" class="text-xl lg:text-2xl font-bold">0</p>
+                    </div>
+                    <div class="bg-white bg-opacity-20 p-2 lg:p-3 rounded-lg">
+                        <svg class="w-5 lg:w-6 h-5 lg:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter dan Search -->
+        <div class="bg-white rounded-xl shadow-lg p-4 lg:p-6 mb-6 lg:mb-8">
+            <div class="flex flex-col gap-3 lg:gap-4">
+                <div class="flex flex-col sm:flex-row gap-3 lg:gap-4 flex-1">
+                    <input type="text" id="searchInput" placeholder="Cari nama siswa..." class="flex-1 px-3 lg:px-4 py-2 text-sm lg:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <select id="classFilter" class="px-3 lg:px-4 py-2 text-sm lg:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="">Semua Kelas</option>
+                        <option value="X-1">X-1</option>
+                        <option value="X-2">X-2</option>
+                        <option value="X-3">X-3</option>
+                        <option value="XI-1">XI-1</option>
+                        <option value="XI-2">XI-2</option>
+                        <option value="XI-3">XI-3</option>
+                        <option value="XII-1">XII-1</option>
+                        <option value="XII-2">XII-2</option>
+                        <option value="XII-3">XII-3</option>
+                        <option value="XII-4">XII-4</option>
+                    </select>
+                </div>
+                <button id="exportBtn" class="bg-green-500 hover:bg-green-600 text-white px-3 lg:px-4 py-2 text-sm lg:text-base rounded-lg transition duration-200 flex items-center justify-center">
+                    <svg class="w-3 lg:w-4 h-3 lg:h-4 mr-1 lg:mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    Export Data
+                </button>
+            </div>
+        </div>
+
+        <!-- Riwayat Penginputan Terbaru -->
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    Riwayat Penginputan Terbaru
+                </h3>
+                <button id="clearHistoryBtn" class="text-red-600 hover:text-red-800 text-sm font-medium flex items-center">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                    Bersihkan Riwayat
+                </button>
+            </div>
+            
+            <div id="recentHistoryContainer" class="space-y-3 max-h-80 overflow-y-auto">
+                <!-- History items will be populated here -->
+            </div>
+        </div>
+
+        <!-- Tabel Data -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+            <div class="px-4 lg:px-6 py-3 lg:py-4 border-b border-gray-200">
+                <h3 class="text-base lg:text-lg font-semibold text-gray-800">Data Siswa dan Poin</h3>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full min-w-full">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-3 lg:px-6 py-2 lg:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
+                            <th class="px-3 lg:px-6 py-2 lg:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[120px]">Nama Siswa</th>
+                            <th class="px-3 lg:px-6 py-2 lg:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kelas</th>
+                            <th class="px-3 lg:px-6 py-2 lg:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Poin</th>
+                            <th class="px-3 lg:px-6 py-2 lg:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell min-w-[140px]">Reward Terakhir</th>
+                            <th class="px-3 lg:px-6 py-2 lg:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">Tanggal Terakhir</th>
+                            <th class="px-3 lg:px-6 py-2 lg:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentTableBody" class="bg-white divide-y divide-gray-200">
+                        <tr id="emptyState">
+                            <td colspan="7" class="px-4 lg:px-6 py-8 lg:py-12 text-center text-gray-500">
+                                <svg class="w-8 lg:w-12 h-8 lg:h-12 mx-auto mb-3 lg:mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                                <p class="text-base lg:text-lg font-medium">Belum ada data siswa</p>
+                                <p class="text-xs lg:text-sm">Tambahkan data siswa pertama menggunakan form di atas</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Student Database Page -->
+    <div id="studentDbPage" class="p-6 hidden">
+        <!-- Student Registration Form -->
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-8 border border-gray-200">
+            <h2 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
+                <svg class="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+                </svg>
+                Registrasi Siswa Baru
+            </h2>
+            
+            <form id="studentRegistrationForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap</label>
+                    <input type="text" id="regStudentName" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Masukkan nama lengkap" required>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">NIS</label>
+                    <input type="text" id="regStudentNIS" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Nomor Induk Siswa" required>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Kelas</label>
+                    <select id="regStudentClass" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                        <option value="">Pilih Kelas</option>
+                        <option value="X-1">X-1</option>
+                        <option value="X-2">X-2</option>
+                        <option value="X-3">X-3</option>
+                        <option value="XI-1">XI-1</option>
+                        <option value="XI-2">XI-2</option>
+                        <option value="XI-3">XI-3</option>
+                        <option value="XII-1">XII-1</option>
+                        <option value="XII-2">XII-2</option>
+                        <option value="XII-3">XII-3</option>
+                        <option value="XII-4">XII-4</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Jenis Kelamin</label>
+                    <select id="regStudentGender" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                        <option value="">Pilih Jenis Kelamin</option>
+                        <option value="Laki-laki">Laki-laki</option>
+                        <option value="Perempuan">Perempuan</option>
+                    </select>
+                </div>
+                
+
+                
+                <div class="flex items-end">
+                    <button type="submit" class="w-full bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg transition duration-200 flex items-center justify-center">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+                        </svg>
+                        Daftarkan Siswa
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Student Database Statistics -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-gradient-to-r from-purple-400 to-purple-600 rounded-xl p-6 text-white">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-purple-100 text-sm">Total Siswa</p>
+                        <p id="dbTotalStudents" class="text-2xl font-bold">0</p>
+                    </div>
+                    <div class="bg-white bg-opacity-20 p-3 rounded-lg">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-gradient-to-r from-cyan-400 to-cyan-600 rounded-xl p-6 text-white">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-cyan-100 text-sm">Laki-laki</p>
+                        <p id="dbMaleStudents" class="text-2xl font-bold">0</p>
+                    </div>
+                    <div class="bg-white bg-opacity-20 p-3 rounded-lg">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-gradient-to-r from-pink-400 to-pink-600 rounded-xl p-6 text-white">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-pink-100 text-sm">Perempuan</p>
+                        <p id="dbFemaleStudents" class="text-2xl font-bold">0</p>
+                    </div>
+                    <div class="bg-white bg-opacity-20 p-3 rounded-lg">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-gradient-to-r from-orange-400 to-orange-600 rounded-xl p-6 text-white">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-orange-100 text-sm">Kelas Aktif</p>
+                        <p id="dbActiveClasses" class="text-2xl font-bold">0</p>
+                    </div>
+                    <div class="bg-white bg-opacity-20 p-3 rounded-lg">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search and Filter for Database -->
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+            <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
+                <div class="flex flex-col md:flex-row gap-4 flex-1">
+                    <input type="text" id="dbSearchInput" placeholder="Cari nama atau NIS..." class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <select id="dbClassFilter" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="">Semua Kelas</option>
+                        <option value="X-1">X-1</option>
+                        <option value="X-2">X-2</option>
+                        <option value="X-3">X-3</option>
+                        <option value="XI-1">XI-1</option>
+                        <option value="XI-2">XI-2</option>
+                        <option value="XI-3">XI-3</option>
+                        <option value="XII-1">XII-1</option>
+                        <option value="XII-2">XII-2</option>
+                        <option value="XII-3">XII-3</option>
+                        <option value="XII-4">XII-4</option>
+                    </select>
+
+                </div>
+                <div class="flex gap-2">
+                    <button id="dbImportBtn" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition duration-200 flex items-center">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"></path>
+                        </svg>
+                        Import CSV
+                    </button>
+                    <button id="dbExportBtn" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg transition duration-200 flex items-center">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        Export Database
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Student Database Table -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-800">Database Siswa</h3>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIS</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Lengkap</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kelas</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jenis Kelamin</th>
+
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentDbTableBody" class="bg-white divide-y divide-gray-200">
+                        <tr id="dbEmptyState">
+                            <td colspan="6" class="px-6 py-12 text-center text-gray-500">
+                                <svg class="w-12 h-12 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                                </svg>
+                                <p class="text-lg font-medium">Belum ada data siswa</p>
+                                <p class="text-sm">Daftarkan siswa pertama menggunakan form di atas</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Analytics Page -->
+    <div id="analyticsPage" class="p-6 hidden">
+        <!-- Analytics Overview Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-gradient-to-r from-violet-400 to-violet-600 rounded-xl p-6 text-white">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-violet-100 text-sm">Total Transaksi</p>
+                        <p id="totalTransactions" class="text-2xl font-bold">0</p>
+                    </div>
+                    <div class="bg-white bg-opacity-20 p-3 rounded-lg">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-gradient-to-r from-teal-400 to-teal-600 rounded-xl p-6 text-white">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-teal-100 text-sm">Siswa Terbaik</p>
+                        <p id="topStudentCount" class="text-2xl font-bold">0</p>
+                    </div>
+                    <div class="bg-white bg-opacity-20 p-3 rounded-lg">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-xl p-6 text-white">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-yellow-100 text-sm">Kelas Terbaik</p>
+                        <p id="topClassName" class="text-xl font-bold">-</p>
+                    </div>
+                    <div class="bg-white bg-opacity-20 p-3 rounded-lg">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-gradient-to-r from-slate-400 to-slate-600 rounded-xl p-6 text-white">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-slate-100 text-sm">Reward Terpopuler</p>
+                        <p id="popularReward" class="text-sm font-bold">-</p>
+                    </div>
+                    <div class="bg-white bg-opacity-20 p-3 rounded-lg">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <!-- Top Students Chart -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-6 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </svg>
+                    Top 10 Siswa Terbaik
+                </h3>
+                <div id="topStudentsChart" class="space-y-3">
+                    <!-- Chart will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Class Performance Chart -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-6 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                    Performa Per Kelas
+                </h3>
+                <div id="classPerformanceChart" class="space-y-3">
+                    <!-- Chart will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Reward Distribution -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <!-- Reward Types Distribution -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-6 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path>
+                    </svg>
+                    Distribusi Jenis Reward
+                </h3>
+                <div id="rewardDistributionChart" class="space-y-3">
+                    <!-- Chart will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Monthly Trend -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-6 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                    </svg>
+                    Tren Bulanan
+                </h3>
+                <div id="monthlyTrendChart" class="space-y-3">
+                    <!-- Chart will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Analytics Tables -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Problem Students -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-6 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                    </svg>
+                    Siswa Perlu Perhatian
+                </h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Nama</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Kelas</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Poin</th>
+                            </tr>
+                        </thead>
+                        <tbody id="problemStudentsTable" class="divide-y divide-gray-200">
+                            <!-- Will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Achievement Summary -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-6 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                    </svg>
+                    Ringkasan Prestasi
+                </h3>
+                <div id="achievementSummary" class="space-y-4">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reports Page -->
+    <div id="reportsPage" class="p-6 hidden">
+        <!-- Report Filter Section -->
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-8 border border-gray-200">
+            <h2 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
+                <svg class="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.414A1 1 0 013 6.707V4z"></path>
+                </svg>
+                Filter Laporan
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Filter Kelas</label>
+                    <select id="reportClassFilter" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="">Semua Kelas</option>
+                        <option value="X-1">X-1</option>
+                        <option value="X-2">X-2</option>
+                        <option value="X-3">X-3</option>
+                        <option value="XI-1">XI-1</option>
+                        <option value="XI-2">XI-2</option>
+                        <option value="XI-3">XI-3</option>
+                        <option value="XII-1">XII-1</option>
+                        <option value="XII-2">XII-2</option>
+                        <option value="XII-3">XII-3</option>
+                        <option value="XII-4">XII-4</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Mulai</label>
+                    <input type="date" id="reportDateFrom" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Akhir</label>
+                    <input type="date" id="reportDateTo" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
+                
+                <div class="flex items-end">
+                    <button id="clearFiltersBtn" class="w-full bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg transition duration-200 flex items-center justify-center">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                        </svg>
+                        Reset Filter
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- Simple Report Templates -->
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+            <h3 class="text-lg font-semibold text-gray-800 mb-6 flex items-center">
+                <svg class="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                Jenis Laporan
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <button onclick="generateTemplateReport('achievement')" class="text-left p-4 border border-gray-200 rounded-lg hover:shadow-md hover:border-blue-300 transition-all duration-200">
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+                            <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-gray-800">Laporan Prestasi</h4>
+                            <p class="text-sm text-gray-600">Siswa dengan poin terbaik</p>
+                        </div>
+                    </div>
+                </button>
+                
+                <button onclick="generateTemplateReport('violation')" class="text-left p-4 border border-gray-200 rounded-lg hover:shadow-md hover:border-blue-300 transition-all duration-200">
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center mr-3">
+                            <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-gray-800">Laporan Pelanggaran</h4>
+                            <p class="text-sm text-gray-600">Siswa yang perlu perhatian</p>
+                        </div>
+                    </div>
+                </button>
+                
+                <button onclick="generateTemplateReport('class-ranking')" class="text-left p-4 border border-gray-200 rounded-lg hover:shadow-md hover:border-blue-300 transition-all duration-200">
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-gray-800">Ranking Kelas</h4>
+                            <p class="text-sm text-gray-600">Performa setiap kelas</p>
+                        </div>
+                    </div>
+                </button>
+                
+                <button onclick="generateTemplateReport('comprehensive')" class="text-left p-4 border border-gray-200 rounded-lg hover:shadow-md hover:border-blue-300 transition-all duration-200">
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
+                            <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-gray-800">Laporan Lengkap</h4>
+                            <p class="text-sm text-gray-600">Semua data dalam satu laporan</p>
+                        </div>
+                    </div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Report Display Area -->
+        <div id="reportDisplayArea" class="bg-white rounded-xl shadow-lg overflow-hidden hidden">
+            <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                <h3 id="reportTitle" class="text-lg font-semibold text-gray-800">Laporan</h3>
+                <div class="flex gap-2">
+                    <button id="printReportBtn" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition duration-200 flex items-center text-sm">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+                        </svg>
+                        Print
+                    </button>
+                    <button id="exportPdfBtn" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition duration-200 flex items-center text-sm">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        Export PDF
+                    </button>
+                    <div class="text-sm text-gray-500 flex items-center" id="reportGeneratedTime"></div>
+                </div>
+            </div>
+            
+            <div id="reportContent" class="p-6">
+                <!-- Report content will be generated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Reward Database Page -->
+    <div id="rewardDbPage" class="p-6 hidden">
+        <!-- Reward Type Form -->
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-8 border border-gray-200">
+            <h2 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
+                <svg class="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                Tambah Jenis Reward Baru
+            </h2>
+            
+            <form id="rewardTypeForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Nama Reward</label>
+                    <input type="text" id="rewardTypeName" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Contoh: Prestasi Akademik" required>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Bobot Poin</label>
+                    <input type="number" id="rewardTypePoints" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Contoh: 10 atau -5" required>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Kategori</label>
+                    <select id="rewardTypeCategory" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                        <option value="">Pilih Kategori</option>
+                        <option value="Reward">Reward</option>
+                        <option value="Bobot">Bobot</option>
+                    </select>
+                </div>
+                
+                <div class="flex items-end">
+                    <button type="submit" class="w-full bg-purple-500 hover:bg-purple-600 text-white font-medium py-2 px-4 rounded-lg transition duration-200 flex items-center justify-center">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Tambah Reward
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Reward Statistics -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-gradient-to-r from-indigo-400 to-indigo-600 rounded-xl p-6 text-white">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-indigo-100 text-sm">Total Jenis Reward</p>
+                        <p id="totalRewardTypes" class="text-2xl font-bold">0</p>
+                    </div>
+                    <div class="bg-white bg-opacity-20 p-3 rounded-lg">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 011-1h1a2 2 0 011 1v1m-4 0h4m-4 0a2 2 0 00-2 2v1a2 2 0 002 2h1m-1 0h4"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-gradient-to-r from-emerald-400 to-emerald-600 rounded-xl p-6 text-white">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-emerald-100 text-sm">Reward Positif</p>
+                        <p id="positiveRewards" class="text-2xl font-bold">0</p>
+                    </div>
+                    <div class="bg-white bg-opacity-20 p-3 rounded-lg">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-gradient-to-r from-rose-400 to-rose-600 rounded-xl p-6 text-white">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-rose-100 text-sm">Reward Negatif</p>
+                        <p id="negativeRewards" class="text-2xl font-bold">0</p>
+                    </div>
+                    <div class="bg-white bg-opacity-20 p-3 rounded-lg">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search and Filter for Reward Database -->
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+            <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
+                <div class="flex flex-col md:flex-row gap-4 flex-1">
+                    <input type="text" id="rewardSearchInput" placeholder="Cari nama reward..." class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <select id="rewardCategoryFilter" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="">Semua Kategori</option>
+                        <option value="Reward">Reward</option>
+                        <option value="Bobot">Bobot</option>
+                    </select>
+
+                </div>
+                <div class="flex gap-2">
+                    <button id="rewardImportBtn" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition duration-200 flex items-center">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"></path>
+                        </svg>
+                        Import CSV
+                    </button>
+                    <button id="rewardExportBtn" class="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-lg transition duration-200 flex items-center">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        Export Reward
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reward Database Table -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-800">Database Jenis Reward</h3>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Reward</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bobot Poin</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kategori</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Dibuat</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rewardDbTableBody" class="bg-white divide-y divide-gray-200">
+                        <tr id="rewardEmptyState">
+                            <td colspan="6" class="px-6 py-12 text-center text-gray-500">
+                                <svg class="w-12 h-12 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 011-1h1a2 2 0 011 1v1m-4 0h4m-4 0a2 2 0 00-2 2v1a2 2 0 002 2h1m-1 0h4"></path>
+                                </svg>
+                                <p class="text-lg font-medium">Belum ada jenis reward</p>
+                                <p class="text-sm">Tambahkan jenis reward pertama menggunakan form di atas</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Modal Detail -->
+    <div id="detailModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-xl p-6 m-4 max-w-2xl w-full max-h-96 overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold">Detail Riwayat Reward</h3>
+                <button id="closeModal" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <!-- Import CSV Modal -->
+    <div id="importCsvModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-xl p-6 m-4 max-w-md w-full">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-lg font-semibold text-gray-800">Import Data Siswa dari CSV</h3>
+                <button id="closeImportModal" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="space-y-4">
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <h4 class="text-sm font-medium text-blue-800 mb-2">Format CSV yang Diperlukan:</h4>
+                    <p class="text-xs text-blue-700 mb-2">File CSV harus memiliki kolom berikut (dengan header):</p>
+                    <code class="text-xs bg-blue-100 px-2 py-1 rounded">NIS,Nama,Kelas,JenisKelamin</code>
+                    <p class="text-xs text-blue-600 mt-2">Contoh: 12345,John Doe,X 1,Laki-laki</p>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Pilih File CSV</label>
+                    <input type="file" id="csvFileInput" accept=".csv" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
+                
+                <div class="flex gap-3 pt-4">
+                    <button id="importCsvBtn" class="flex-1 bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg transition duration-200 disabled:bg-gray-300 disabled:cursor-not-allowed">
+                        Import Data
+                    </button>
+                    <button id="cancelImport" class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 font-medium py-2 px-4 rounded-lg transition duration-200">
+                        Batal
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Reward CSV Modal -->
+    <div id="importRewardCsvModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-xl p-6 m-4 max-w-md w-full">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-lg font-semibold text-gray-800">Import Data Reward dari CSV</h3>
+                <button id="closeRewardImportModal" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="space-y-4">
+                <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                    <h4 class="text-sm font-medium text-purple-800 mb-2">Format CSV yang Diperlukan:</h4>
+                    <p class="text-xs text-purple-700 mb-2">File CSV harus memiliki kolom berikut (dengan header):</p>
+                    <code class="text-xs bg-purple-100 px-2 py-1 rounded">NamaReward,BobotPoin,Kategori</code>
+                    <p class="text-xs text-purple-600 mt-2">Contoh: Prestasi Akademik,10,Reward</p>
+                    <p class="text-xs text-purple-600">Contoh: Terlambat,-2,Bobot</p>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Pilih File CSV</label>
+                    <input type="file" id="rewardCsvFileInput" accept=".csv" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
+                
+                <div class="flex gap-3 pt-4">
+                    <button id="importRewardCsvBtn" class="flex-1 bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg transition duration-200 disabled:bg-gray-300 disabled:cursor-not-allowed">
+                        Import Data
+                    </button>
+                    <button id="cancelRewardImport" class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 font-medium py-2 px-4 rounded-lg transition duration-200">
+                        Batal
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Reward Modal -->
+    <div id="editRewardModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-xl p-6 m-4 max-w-md w-full">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-lg font-semibold text-gray-800">Edit Jenis Reward</h3>
+                <button id="closeEditModal" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <form id="editRewardForm" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Nama Reward</label>
+                    <input type="text" id="editRewardName" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Bobot Poin</label>
+                    <input type="number" id="editRewardPoints" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Kategori</label>
+                    <select id="editRewardCategory" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                        <option value="">Pilih Kategori</option>
+                        <option value="Reward">Reward</option>
+                        <option value="Bobot">Bobot</option>
+                    </select>
+                </div>
+                
+                <div class="flex gap-3 pt-4">
+                    <button type="submit" class="flex-1 bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg transition duration-200">
+                        Simpan Perubahan
+                    </button>
+                    <button type="button" id="cancelEdit" class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 font-medium py-2 px-4 rounded-lg transition duration-200">
+                        Batal
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let students = JSON.parse(localStorage.getItem('schoolRewardData')) || [];
+        let studentDatabase = JSON.parse(localStorage.getItem('studentDatabase')) || [];
+        let rewardDatabase = JSON.parse(localStorage.getItem('rewardDatabase')) || [];
+        let inputHistory = JSON.parse(localStorage.getItem('inputHistory')) || [];
+        let editingIndex = -1;
+        let currentPage = 'reward';
+        let sidebarMinimized = false;
+
+        // Sidebar Toggle
+        document.getElementById('sidebarToggle').addEventListener('click', function() {
+            toggleSidebar();
+        });
+
+        // Mobile Menu Toggle
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            toggleMobileSidebar();
+        });
+
+        // Mobile Overlay Click
+        document.getElementById('mobileOverlay').addEventListener('click', function() {
+            closeMobileSidebar();
+        });
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const logoText = document.getElementById('logoText');
+            const toggleIcon = document.getElementById('toggleIcon');
+            const menuTexts = document.querySelectorAll('.menu-text');
+            
+            // Only apply desktop sidebar toggle on large screens
+            if (window.innerWidth >= 1024) {
+                sidebarMinimized = !sidebarMinimized;
+                
+                if (sidebarMinimized) {
+                    // Minimize sidebar
+                    sidebar.classList.remove('w-64');
+                    sidebar.classList.add('w-16');
+                    
+                    // Hide text elements
+                    logoText.classList.add('hidden');
+                    menuTexts.forEach(text => text.classList.add('hidden'));
+                    
+                    // Change toggle icon
+                    toggleIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path>';
+                    
+                    // Update user profile section width
+                    const userProfile = document.querySelector('.absolute.bottom-0');
+                    userProfile.classList.remove('w-64');
+                    userProfile.classList.add('w-16');
+                    
+                } else {
+                    // Expand sidebar
+                    sidebar.classList.remove('w-16');
+                    sidebar.classList.add('w-64');
+                    
+                    // Show text elements
+                    logoText.classList.remove('hidden');
+                    menuTexts.forEach(text => text.classList.remove('hidden'));
+                    
+                    // Change toggle icon
+                    toggleIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path>';
+                    
+                    // Update user profile section width
+                    const userProfile = document.querySelector('.absolute.bottom-0');
+                    userProfile.classList.remove('w-16');
+                    userProfile.classList.add('w-64');
+                }
+                
+                // Save state to localStorage
+                localStorage.setItem('sidebarMinimized', sidebarMinimized);
+            } else {
+                // On mobile, close the sidebar
+                closeMobileSidebar();
+            }
+        }
+
+        function toggleMobileSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('mobileOverlay');
+            
+            if (sidebar.classList.contains('-translate-x-full')) {
+                // Show sidebar
+                sidebar.classList.remove('-translate-x-full');
+                sidebar.classList.add('translate-x-0');
+                overlay.classList.remove('hidden');
+            } else {
+                // Hide sidebar
+                closeMobileSidebar();
+            }
+        }
+
+        function closeMobileSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('mobileOverlay');
+            
+            sidebar.classList.add('-translate-x-full');
+            sidebar.classList.remove('translate-x-0');
+            overlay.classList.add('hidden');
+        }
+
+        // Load sidebar state on page load
+        function loadSidebarState() {
+            const savedState = localStorage.getItem('sidebarMinimized');
+            if (savedState === 'true') {
+                toggleSidebar();
+            }
+        }
+
+        // Page Navigation
+        document.getElementById('rewardPageBtn').addEventListener('click', function() {
+            showPage('reward');
+            closeMobileSidebar();
+        });
+
+        document.getElementById('studentDbPageBtn').addEventListener('click', function() {
+            showPage('database');
+            closeMobileSidebar();
+        });
+
+        document.getElementById('rewardDbPageBtn').addEventListener('click', function() {
+            showPage('rewardDb');
+            closeMobileSidebar();
+        });
+
+        document.getElementById('analyticsPageBtn').addEventListener('click', function() {
+            showPage('analytics');
+            closeMobileSidebar();
+        });
+
+        document.getElementById('reportsPageBtn').addEventListener('click', function() {
+            showPage('reports');
+            closeMobileSidebar();
+        });
+
+        // Populate student dropdown
+        function populateStudentDropdown() {
+            const studentSelect = document.getElementById('studentName');
+            const classSelect = document.getElementById('studentClass');
+            
+            // Clear existing options except the first one
+            studentSelect.innerHTML = '<option value="">Pilih Siswa</option>';
+            
+            // Get selected class filter
+            const selectedClass = classSelect.value;
+            
+            // Filter students by class if class is selected
+            let filteredStudents = studentDatabase;
+            if (selectedClass) {
+                filteredStudents = studentDatabase.filter(student => student.class === selectedClass);
+            }
+            
+            // Sort students by name
+            filteredStudents.sort((a, b) => a.name.localeCompare(b.name));
+            
+            // Add students to dropdown
+            filteredStudents.forEach(student => {
+                const option = document.createElement('option');
+                option.value = student.name;
+                option.textContent = `${student.name} - ${student.class}`;
+                option.dataset.class = student.class;
+                studentSelect.appendChild(option);
+            });
+        }
+
+        // Auto-fill class when student is selected
+        document.getElementById('studentName').addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            if (selectedOption.dataset.class) {
+                document.getElementById('studentClass').value = selectedOption.dataset.class;
+            }
+        });
+
+        // Update student dropdown when class filter changes
+        document.getElementById('studentClass').addEventListener('change', function() {
+            populateStudentDropdown();
+            // Clear student selection when class changes
+            document.getElementById('studentName').value = '';
+        });
+
+        function showPage(page) {
+            const rewardPage = document.getElementById('rewardPage');
+            const studentDbPage = document.getElementById('studentDbPage');
+            const rewardDbPage = document.getElementById('rewardDbPage');
+            const analyticsPage = document.getElementById('analyticsPage');
+            const reportsPage = document.getElementById('reportsPage');
+            const rewardBtn = document.getElementById('rewardPageBtn');
+            const dbBtn = document.getElementById('studentDbPageBtn');
+            const rewardDbBtn = document.getElementById('rewardDbPageBtn');
+            const analyticsBtn = document.getElementById('analyticsPageBtn');
+            const reportsBtn = document.getElementById('reportsPageBtn');
+            const pageTitle = document.getElementById('pageTitle');
+
+            // Hide all pages
+            rewardPage.classList.add('hidden');
+            studentDbPage.classList.add('hidden');
+            rewardDbPage.classList.add('hidden');
+            analyticsPage.classList.add('hidden');
+            reportsPage.classList.add('hidden');
+
+            // Reset all buttons
+            [rewardBtn, dbBtn, rewardDbBtn, analyticsBtn, reportsBtn].forEach(btn => {
+                btn.classList.remove('text-blue-600', 'bg-blue-50');
+                btn.classList.add('text-gray-600', 'hover:text-blue-600', 'hover:bg-blue-50');
+            });
+
+            if (page === 'reward') {
+                rewardPage.classList.remove('hidden');
+                rewardBtn.classList.add('text-blue-600', 'bg-blue-50');
+                rewardBtn.classList.remove('text-gray-600', 'hover:text-blue-600', 'hover:bg-blue-50');
+                pageTitle.textContent = 'Dashboard';
+                currentPage = 'reward';
+                populateStudentDropdown();
+                populateRewardDropdown();
+            } else if (page === 'database') {
+                studentDbPage.classList.remove('hidden');
+                dbBtn.classList.add('text-blue-600', 'bg-blue-50');
+                dbBtn.classList.remove('text-gray-600', 'hover:text-blue-600', 'hover:bg-blue-50');
+                pageTitle.textContent = 'Database Siswa';
+                currentPage = 'database';
+                renderStudentDatabase();
+                updateDatabaseStatistics();
+            } else if (page === 'rewardDb') {
+                rewardDbPage.classList.remove('hidden');
+                rewardDbBtn.classList.add('text-blue-600', 'bg-blue-50');
+                rewardDbBtn.classList.remove('text-gray-600', 'hover:text-blue-600', 'hover:bg-blue-50');
+                pageTitle.textContent = 'Database RB';
+                currentPage = 'rewardDb';
+                renderRewardDatabase();
+                updateRewardStatistics();
+            } else if (page === 'analytics') {
+                analyticsPage.classList.remove('hidden');
+                analyticsBtn.classList.add('text-blue-600', 'bg-blue-50');
+                analyticsBtn.classList.remove('text-gray-600', 'hover:text-blue-600', 'hover:bg-blue-50');
+                pageTitle.textContent = 'Analisis';
+                currentPage = 'analytics';
+                renderAnalytics();
+            } else if (page === 'reports') {
+                reportsPage.classList.remove('hidden');
+                reportsBtn.classList.add('text-blue-600', 'bg-blue-50');
+                reportsBtn.classList.remove('text-gray-600', 'hover:text-blue-600', 'hover:bg-blue-50');
+                pageTitle.textContent = 'Laporan';
+                currentPage = 'reports';
+                initializeReportsPage();
+            }
+        }
+
+        // Student Registration Form
+        document.getElementById('studentRegistrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('regStudentName').value;
+            const nis = document.getElementById('regStudentNIS').value;
+            const studentClass = document.getElementById('regStudentClass').value;
+            const gender = document.getElementById('regStudentGender').value;
+            
+            // Check if NIS already exists
+            if (studentDatabase.find(s => s.nis === nis)) {
+                alert('NIS sudah terdaftar! Gunakan NIS yang berbeda.');
+                return;
+            }
+            
+            studentDatabase.push({
+                nis: nis,
+                name: name,
+                class: studentClass,
+                gender: gender,
+                registrationDate: new Date().toLocaleDateString('id-ID')
+            });
+            
+            saveStudentDatabase();
+            renderStudentDatabase();
+            updateDatabaseStatistics();
+            populateStudentDropdown(); // Update dropdown when new student is added
+            this.reset();
+            alert('Siswa berhasil didaftarkan!');
+        });
+
+        // Database search and filter
+        document.getElementById('dbSearchInput').addEventListener('input', renderStudentDatabase);
+        document.getElementById('dbClassFilter').addEventListener('change', renderStudentDatabase);
+
+        // Database import
+        document.getElementById('dbImportBtn').addEventListener('click', function() {
+            document.getElementById('importCsvModal').classList.remove('hidden');
+            document.getElementById('importCsvModal').classList.add('flex');
+        });
+
+        // Reward database import
+        document.getElementById('rewardImportBtn').addEventListener('click', function() {
+            document.getElementById('importRewardCsvModal').classList.remove('hidden');
+            document.getElementById('importRewardCsvModal').classList.add('flex');
+        });
+
+        // Close import modal
+        document.getElementById('closeImportModal').addEventListener('click', function() {
+            closeImportModal();
+        });
+
+        document.getElementById('cancelImport').addEventListener('click', function() {
+            closeImportModal();
+        });
+
+        function closeImportModal() {
+            document.getElementById('importCsvModal').classList.add('hidden');
+            document.getElementById('importCsvModal').classList.remove('flex');
+            document.getElementById('csvFileInput').value = '';
+        }
+
+        // Close reward import modal
+        document.getElementById('closeRewardImportModal').addEventListener('click', function() {
+            closeRewardImportModal();
+        });
+
+        document.getElementById('cancelRewardImport').addEventListener('click', function() {
+            closeRewardImportModal();
+        });
+
+        function closeRewardImportModal() {
+            document.getElementById('importRewardCsvModal').classList.add('hidden');
+            document.getElementById('importRewardCsvModal').classList.remove('flex');
+            document.getElementById('rewardCsvFileInput').value = '';
+        }
+
+        // CSV Import functionality
+        document.getElementById('importCsvBtn').addEventListener('click', function() {
+            const fileInput = document.getElementById('csvFileInput');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('Silakan pilih file CSV terlebih dahulu!');
+                return;
+            }
+            
+            if (!file.name.toLowerCase().endsWith('.csv')) {
+                alert('File harus berformat CSV!');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const csv = e.target.result;
+                    const lines = csv.split('\n').filter(line => line.trim());
+                    
+                    if (lines.length < 2) {
+                        alert('File CSV harus memiliki header dan minimal 1 baris data!');
+                        return;
+                    }
+                    
+                    const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
+                    const requiredHeaders = ['NIS', 'Nama', 'Kelas', 'JenisKelamin'];
+                    
+                    // Check if all required headers exist
+                    const missingHeaders = requiredHeaders.filter(header => 
+                        !headers.some(h => h.toLowerCase() === header.toLowerCase())
+                    );
+                    
+                    if (missingHeaders.length > 0) {
+                        alert(`Header yang hilang: ${missingHeaders.join(', ')}\nPastikan CSV memiliki kolom: ${requiredHeaders.join(', ')}`);
+                        return;
+                    }
+                    
+                    // Find header indices
+                    const headerIndices = {};
+                    requiredHeaders.forEach(header => {
+                        const index = headers.findIndex(h => h.toLowerCase() === header.toLowerCase());
+                        headerIndices[header] = index;
+                    });
+                    
+                    let importedCount = 0;
+                    let skippedCount = 0;
+                    const errors = [];
+                    
+                    for (let i = 1; i < lines.length; i++) {
+                        const values = lines[i].split(',').map(v => v.trim().replace(/"/g, ''));
+                        
+                        if (values.length < requiredHeaders.length) {
+                            errors.push(`Baris ${i + 1}: Data tidak lengkap`);
+                            continue;
+                        }
+                        
+                        const nis = values[headerIndices['NIS']];
+                        const nama = values[headerIndices['Nama']];
+                        const kelas = values[headerIndices['Kelas']];
+                        const jenisKelamin = values[headerIndices['JenisKelamin']];
+                        
+                        // Validate required fields
+                        if (!nis || !nama || !kelas || !jenisKelamin) {
+                            errors.push(`Baris ${i + 1}: Ada field yang kosong`);
+                            continue;
+                        }
+                        
+                        // Check if NIS already exists
+                        if (studentDatabase.find(s => s.nis === nis)) {
+                            skippedCount++;
+                            continue;
+                        }
+                        
+                        // Validate gender
+                        if (!['Laki-laki', 'Perempuan'].includes(jenisKelamin)) {
+                            errors.push(`Baris ${i + 1}: Jenis kelamin harus 'Laki-laki' atau 'Perempuan'`);
+                            continue;
+                        }
+                        
+                        // Add student to database
+                        studentDatabase.push({
+                            nis: nis,
+                            name: nama,
+                            class: kelas,
+                            gender: jenisKelamin,
+                            registrationDate: new Date().toLocaleDateString('id-ID')
+                        });
+                        
+                        importedCount++;
+                    }
+                    
+                    // Save and update UI
+                    saveStudentDatabase();
+                    renderStudentDatabase();
+                    updateDatabaseStatistics();
+                    populateStudentDropdown();
+                    closeImportModal();
+                    
+                    // Show results
+                    let message = `Import selesai!\n\n`;
+                    message += `✅ Berhasil diimport: ${importedCount} siswa\n`;
+                    if (skippedCount > 0) {
+                        message += `⚠️ Dilewati (NIS sudah ada): ${skippedCount} siswa\n`;
+                    }
+                    if (errors.length > 0) {
+                        message += `❌ Error: ${errors.length} baris\n\n`;
+                        message += `Detail error:\n${errors.slice(0, 5).join('\n')}`;
+                        if (errors.length > 5) {
+                            message += `\n... dan ${errors.length - 5} error lainnya`;
+                        }
+                    }
+                    
+                    alert(message);
+                    
+                } catch (error) {
+                    alert('Error membaca file CSV. Pastikan format file benar!');
+                    console.error('CSV Import Error:', error);
+                }
+            };
+            
+            reader.readAsText(file);
+        });
+
+        // Reward CSV Import functionality
+        document.getElementById('importRewardCsvBtn').addEventListener('click', function() {
+            const fileInput = document.getElementById('rewardCsvFileInput');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('Silakan pilih file CSV terlebih dahulu!');
+                return;
+            }
+            
+            if (!file.name.toLowerCase().endsWith('.csv')) {
+                alert('File harus berformat CSV!');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const csv = e.target.result;
+                    const lines = csv.split('\n').filter(line => line.trim());
+                    
+                    if (lines.length < 2) {
+                        alert('File CSV harus memiliki header dan minimal 1 baris data!');
+                        return;
+                    }
+                    
+                    const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
+                    const requiredHeaders = ['NamaReward', 'BobotPoin', 'Kategori'];
+                    
+                    // Check if all required headers exist
+                    const missingHeaders = requiredHeaders.filter(header => 
+                        !headers.some(h => h.toLowerCase() === header.toLowerCase())
+                    );
+                    
+                    if (missingHeaders.length > 0) {
+                        alert(`Header yang hilang: ${missingHeaders.join(', ')}\nPastikan CSV memiliki kolom: ${requiredHeaders.join(', ')}`);
+                        return;
+                    }
+                    
+                    // Find header indices
+                    const headerIndices = {};
+                    requiredHeaders.forEach(header => {
+                        const index = headers.findIndex(h => h.toLowerCase() === header.toLowerCase());
+                        headerIndices[header] = index;
+                    });
+                    
+                    let importedCount = 0;
+                    let skippedCount = 0;
+                    const errors = [];
+                    
+                    for (let i = 1; i < lines.length; i++) {
+                        const values = lines[i].split(',').map(v => v.trim().replace(/"/g, ''));
+                        
+                        if (values.length < requiredHeaders.length) {
+                            errors.push(`Baris ${i + 1}: Data tidak lengkap`);
+                            continue;
+                        }
+                        
+                        const namaReward = values[headerIndices['NamaReward']];
+                        const bobotPoin = values[headerIndices['BobotPoin']];
+                        const kategori = values[headerIndices['Kategori']];
+                        
+                        // Validate required fields
+                        if (!namaReward || !bobotPoin || !kategori) {
+                            errors.push(`Baris ${i + 1}: Ada field yang kosong`);
+                            continue;
+                        }
+                        
+                        // Validate points is a number
+                        const points = parseInt(bobotPoin);
+                        if (isNaN(points)) {
+                            errors.push(`Baris ${i + 1}: Bobot poin harus berupa angka`);
+                            continue;
+                        }
+                        
+                        // Check if reward name already exists
+                        if (rewardDatabase.find(r => r.name.toLowerCase() === namaReward.toLowerCase())) {
+                            skippedCount++;
+                            continue;
+                        }
+                        
+                        // Validate category
+                        if (!['Reward', 'Bobot'].includes(kategori)) {
+                            errors.push(`Baris ${i + 1}: Kategori harus 'Reward' atau 'Bobot'`);
+                            continue;
+                        }
+                        
+                        // Add reward to database
+                        rewardDatabase.push({
+                            name: namaReward,
+                            points: points,
+                            category: kategori,
+                            createdDate: new Date().toLocaleDateString('id-ID')
+                        });
+                        
+                        importedCount++;
+                    }
+                    
+                    // Save and update UI
+                    saveRewardDatabase();
+                    renderRewardDatabase();
+                    updateRewardStatistics();
+                    populateRewardDropdown();
+                    closeRewardImportModal();
+                    
+                    // Show results
+                    let message = `Import selesai!\n\n`;
+                    message += `✅ Berhasil diimport: ${importedCount} jenis reward\n`;
+                    if (skippedCount > 0) {
+                        message += `⚠️ Dilewati (nama sudah ada): ${skippedCount} jenis reward\n`;
+                    }
+                    if (errors.length > 0) {
+                        message += `❌ Error: ${errors.length} baris\n\n`;
+                        message += `Detail error:\n${errors.slice(0, 5).join('\n')}`;
+                        if (errors.length > 5) {
+                            message += `\n... dan ${errors.length - 5} error lainnya`;
+                        }
+                    }
+                    
+                    alert(message);
+                    
+                } catch (error) {
+                    alert('Error membaca file CSV. Pastikan format file benar!');
+                    console.error('Reward CSV Import Error:', error);
+                }
+            };
+            
+            reader.readAsText(file);
+        });
+
+        // Database export
+        document.getElementById('dbExportBtn').addEventListener('click', function() {
+            const csvContent = generateDatabaseCSV();
+            downloadCSV(csvContent, 'database_siswa.csv');
+        });
+
+        // Form submission
+        document.getElementById('studentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('studentName').value;
+            const studentClass = document.getElementById('studentClass').value;
+            const rewardType = document.getElementById('rewardType').value;
+            const points = parseInt(document.getElementById('rewardType').selectedOptions[0].dataset.points);
+            const rewardDate = document.getElementById('rewardDate').value;
+            
+            // Format date
+            const dateObj = new Date(rewardDate);
+            const formattedDate = dateObj.toLocaleDateString('id-ID');
+            
+            const existingStudentIndex = students.findIndex(s => s.name === name && s.class === studentClass);
+            
+            if (existingStudentIndex !== -1) {
+                // Update existing student
+                students[existingStudentIndex].rewards.push({
+                    type: rewardType,
+                    points: points,
+                    date: formattedDate
+                });
+                students[existingStudentIndex].totalPoints += points;
+            } else {
+                // Add new student
+                students.push({
+                    name: name,
+                    class: studentClass,
+                    totalPoints: points,
+                    rewards: [{
+                        type: rewardType,
+                        points: points,
+                        date: formattedDate
+                    }]
+                });
+            }
+            
+            // Add to input history
+            addToInputHistory({
+                studentName: name,
+                studentClass: studentClass,
+                rewardType: rewardType,
+                points: points,
+                timestamp: formattedDate,
+                action: 'add'
+            });
+            
+            saveData();
+            renderTable();
+            updateStatistics();
+            renderInputHistory();
+            this.reset();
+            
+            // Reset date to current
+            setCurrentDate();
+        });
+
+        // Search and filter
+        document.getElementById('searchInput').addEventListener('input', renderTable);
+        document.getElementById('classFilter').addEventListener('change', renderTable);
+
+        // Export functionality
+        document.getElementById('exportBtn').addEventListener('click', function() {
+            const csvContent = generateCSV();
+            downloadCSV(csvContent, 'data_reward_siswa.csv');
+        });
+
+        function renderTable() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const classFilter = document.getElementById('classFilter').value;
+            
+            let filteredStudents = students.filter(student => {
+                const matchesSearch = student.name.toLowerCase().includes(searchTerm);
+                const matchesClass = !classFilter || student.class === classFilter;
+                return matchesSearch && matchesClass;
+            });
+
+            // Sort by total points descending
+            filteredStudents.sort((a, b) => b.totalPoints - a.totalPoints);
+
+            const tbody = document.getElementById('studentTableBody');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (filteredStudents.length === 0) {
+                tbody.innerHTML = '';
+                tbody.appendChild(emptyState);
+                return;
+            }
+
+            tbody.innerHTML = '';
+            
+            filteredStudents.forEach((student, index) => {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-50';
+                
+                const pointsClass = student.totalPoints >= 0 ? 'text-green-600 bg-green-100' : 'text-red-600 bg-red-100';
+                const latestReward = student.rewards.length > 0 ? student.rewards[student.rewards.length - 1] : null;
+                const latestRewardType = latestReward ? latestReward.type : '-';
+                const latestDate = latestReward ? latestReward.date : '-';
+                
+                row.innerHTML = `
+                    <td class="px-3 lg:px-6 py-3 lg:py-4 whitespace-nowrap text-xs lg:text-sm text-gray-900">${index + 1}</td>
+                    <td class="px-3 lg:px-6 py-3 lg:py-4 whitespace-nowrap">
+                        <div class="text-xs lg:text-sm font-medium text-gray-900">${student.name}</div>
+                    </td>
+                    <td class="px-3 lg:px-6 py-3 lg:py-4 whitespace-nowrap">
+                        <span class="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">${student.class}</span>
+                    </td>
+                    <td class="px-3 lg:px-6 py-3 lg:py-4 whitespace-nowrap">
+                        <span class="px-2 lg:px-3 py-1 text-xs lg:text-sm font-semibold rounded-full ${pointsClass}">${student.totalPoints}</span>
+                    </td>
+                    <td class="px-3 lg:px-6 py-3 lg:py-4 text-xs lg:text-sm text-gray-500 max-w-xs truncate hidden sm:table-cell">${latestRewardType}</td>
+                    <td class="px-3 lg:px-6 py-3 lg:py-4 text-xs lg:text-sm text-gray-500 max-w-xs truncate hidden md:table-cell">${latestDate}</td>
+                    <td class="px-3 lg:px-6 py-3 lg:py-4 whitespace-nowrap text-xs lg:text-sm font-medium">
+                        <div class="flex flex-col sm:flex-row gap-1 sm:gap-3">
+                            <button onclick="showDetail(${students.indexOf(student)})" class="text-blue-600 hover:text-blue-900">Detail</button>
+                            <button onclick="deleteStudent(${students.indexOf(student)})" class="text-red-600 hover:text-red-900">Hapus</button>
+                        </div>
+                    </td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+
+        function showDetail(index) {
+            const student = students[index];
+            const modal = document.getElementById('detailModal');
+            const content = document.getElementById('modalContent');
+            
+            let rewardsHTML = student.rewards.map(reward => {
+                const pointsClass = reward.points >= 0 ? 'text-green-600' : 'text-red-600';
+                const displayDate = reward.date || 'Tanggal tidak tersedia';
+                return `
+                    <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                        <div>
+                            <span class="font-medium">${reward.type}</span>
+                            <span class="text-sm text-gray-500 ml-2">${displayDate}</span>
+                        </div>
+                        <span class="font-semibold ${pointsClass}">${reward.points > 0 ? '+' : ''}${reward.points}</span>
+                    </div>
+                `;
+            }).join('');
+            
+            content.innerHTML = `
+                <div class="mb-4">
+                    <h4 class="font-semibold text-lg">${student.name} - ${student.class}</h4>
+                    <p class="text-gray-600">Total Poin: <span class="font-semibold ${student.totalPoints >= 0 ? 'text-green-600' : 'text-red-600'}">${student.totalPoints}</span></p>
+                </div>
+                <div class="space-y-1">
+                    ${rewardsHTML}
+                </div>
+            `;
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function deleteStudent(index) {
+            if (confirm('Apakah Anda yakin ingin menghapus data siswa ini?')) {
+                const deletedStudent = students[index];
+                
+                // Add to input history
+                addToInputHistory({
+                    studentName: deletedStudent.name,
+                    studentClass: deletedStudent.class,
+                    rewardType: 'Data Siswa',
+                    points: deletedStudent.totalPoints,
+                    timestamp: new Date().toLocaleString('id-ID'),
+                    action: 'delete'
+                });
+                
+                students.splice(index, 1);
+                saveData();
+                renderTable();
+                updateStatistics();
+                renderInputHistory();
+            }
+        }
+
+        // Input History Functions
+        function addToInputHistory(entry) {
+            // Add to beginning of array (most recent first)
+            inputHistory.unshift(entry);
+            
+            // Keep only last 50 entries
+            if (inputHistory.length > 50) {
+                inputHistory = inputHistory.slice(0, 50);
+            }
+            
+            saveInputHistory();
+        }
+
+        function saveInputHistory() {
+            localStorage.setItem('inputHistory', JSON.stringify(inputHistory));
+        }
+
+        function renderInputHistory() {
+            const container = document.getElementById('recentHistoryContainer');
+            
+            if (inputHistory.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-8 text-gray-500">
+                        <svg class="w-12 h-12 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <p class="text-lg font-medium">Belum ada riwayat penginputan</p>
+                        <p class="text-sm">Riwayat akan muncul setelah Anda menambah atau menghapus data</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Show only last 10 entries
+            const recentEntries = inputHistory.slice(0, 10);
+            
+            container.innerHTML = recentEntries.map(entry => {
+                const actionIcon = entry.action === 'add' ? 
+                    '<svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>' :
+                    '<svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>';
+                
+                const actionText = entry.action === 'add' ? 'Menambahkan' : 'Menghapus';
+                const actionColor = entry.action === 'add' ? 'text-green-600' : 'text-red-600';
+                const pointsColor = entry.points >= 0 ? 'text-green-600' : 'text-red-600';
+                const pointsSign = entry.points > 0 ? '+' : '';
+                
+                return `
+                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-200">
+                        <div class="flex items-center space-x-3">
+                            <div class="flex-shrink-0">
+                                ${actionIcon}
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-sm font-medium ${actionColor}">${actionText}</span>
+                                    <span class="text-sm text-gray-600">${entry.rewardType}</span>
+                                    ${entry.action === 'add' ? `<span class="text-xs font-semibold px-2 py-1 rounded-full ${entry.points >= 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">${pointsSign}${entry.points}</span>` : ''}
+                                </div>
+                                <div class="flex items-center space-x-2 mt-1">
+                                    <span class="text-sm font-medium text-gray-800">${entry.studentName}</span>
+                                    <span class="text-xs px-2 py-1 bg-blue-100 text-blue-800 rounded-full">${entry.studentClass}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex-shrink-0 text-right">
+                            <div class="text-xs text-gray-500">${entry.timestamp}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function clearInputHistory() {
+            if (confirm('Apakah Anda yakin ingin menghapus semua riwayat penginputan?')) {
+                inputHistory = [];
+                saveInputHistory();
+                renderInputHistory();
+            }
+        }
+
+        // Clear history button event listener
+        document.getElementById('clearHistoryBtn').addEventListener('click', clearInputHistory);
+
+        function updateStatistics() {
+            const totalStudents = students.length;
+            const totalPositive = students.reduce((sum, student) => {
+                const positivePoints = student.rewards.filter(r => r.points > 0).reduce((s, r) => s + r.points, 0);
+                return sum + positivePoints;
+            }, 0);
+            const totalNegative = Math.abs(students.reduce((sum, student) => {
+                const negativePoints = student.rewards.filter(r => r.points < 0).reduce((s, r) => s + r.points, 0);
+                return sum + negativePoints;
+            }, 0));
+            const averagePoints = totalStudents > 0 ? Math.round(students.reduce((sum, s) => sum + s.totalPoints, 0) / totalStudents) : 0;
+
+            document.getElementById('totalStudents').textContent = totalStudents;
+            document.getElementById('totalPositive').textContent = totalPositive;
+            document.getElementById('totalNegative').textContent = totalNegative;
+            document.getElementById('averagePoints').textContent = averagePoints;
+        }
+
+        function saveData() {
+            localStorage.setItem('schoolRewardData', JSON.stringify(students));
+        }
+
+        function saveStudentDatabase() {
+            localStorage.setItem('studentDatabase', JSON.stringify(studentDatabase));
+        }
+
+        function renderStudentDatabase() {
+            const searchTerm = document.getElementById('dbSearchInput').value.toLowerCase();
+            const classFilter = document.getElementById('dbClassFilter').value;
+            
+            let filteredStudents = studentDatabase.filter(student => {
+                const matchesSearch = student.name.toLowerCase().includes(searchTerm) || 
+                                    student.nis.toLowerCase().includes(searchTerm);
+                const matchesClass = !classFilter || student.class === classFilter;
+                return matchesSearch && matchesClass;
+            });
+
+            // Sort by name
+            filteredStudents.sort((a, b) => a.name.localeCompare(b.name));
+
+            const tbody = document.getElementById('studentDbTableBody');
+            const emptyState = document.getElementById('dbEmptyState');
+            
+            if (filteredStudents.length === 0) {
+                tbody.innerHTML = '';
+                tbody.appendChild(emptyState);
+                return;
+            }
+
+            tbody.innerHTML = '';
+            
+            filteredStudents.forEach((student, index) => {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-50';
+                
+                const genderBadge = student.gender === 'Laki-laki' ? 
+                    'bg-blue-100 text-blue-800' : 'bg-pink-100 text-pink-800';
+                
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${index + 1}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-medium text-gray-900">${student.nis}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-medium text-gray-900">${student.name}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">${student.class}</span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 py-1 text-xs font-medium ${genderBadge} rounded-full">${student.gender}</span>
+                    </td>
+
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <button onclick="deleteStudentDb(${studentDatabase.indexOf(student)})" class="text-red-600 hover:text-red-900">Hapus</button>
+                    </td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+
+        function updateDatabaseStatistics() {
+            const totalStudents = studentDatabase.length;
+            const maleStudents = studentDatabase.filter(s => s.gender === 'Laki-laki').length;
+            const femaleStudents = studentDatabase.filter(s => s.gender === 'Perempuan').length;
+            const activeClasses = [...new Set(studentDatabase.map(s => s.class))].length;
+
+            document.getElementById('dbTotalStudents').textContent = totalStudents;
+            document.getElementById('dbMaleStudents').textContent = maleStudents;
+            document.getElementById('dbFemaleStudents').textContent = femaleStudents;
+            document.getElementById('dbActiveClasses').textContent = activeClasses;
+        }
+
+
+
+        function deleteStudentDb(index) {
+            if (confirm('Apakah Anda yakin ingin menghapus data siswa ini dari database?')) {
+                studentDatabase.splice(index, 1);
+                saveStudentDatabase();
+                renderStudentDatabase();
+                updateDatabaseStatistics();
+                populateStudentDropdown(); // Update dropdown when student is deleted
+            }
+        }
+
+        function generateDatabaseCSV() {
+            let csv = 'No,NIS,Nama Lengkap,Kelas,Jenis Kelamin,Tanggal Registrasi\n';
+            studentDatabase.forEach((student, index) => {
+                csv += `${index + 1},"${student.nis}","${student.name}","${student.class}","${student.gender}","${student.registrationDate}"\n`;
+            });
+            return csv;
+        }
+
+        function generateCSV() {
+            let csv = 'No,Nama,Kelas,Total Poin,Jumlah Reward\n';
+            students.forEach((student, index) => {
+                csv += `${index + 1},"${student.name}","${student.class}",${student.totalPoints},${student.rewards.length}\n`;
+            });
+            return csv;
+        }
+
+        function downloadCSV(content, filename) {
+            const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', filename);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Modal close
+        document.getElementById('closeModal').addEventListener('click', function() {
+            document.getElementById('detailModal').classList.add('hidden');
+            document.getElementById('detailModal').classList.remove('flex');
+        });
+
+        // Edit Reward Modal functionality
+        let editingRewardIndex = -1;
+
+        function editRewardDb(index) {
+            const reward = rewardDatabase[index];
+            editingRewardIndex = index;
+            
+            // Populate form with current values
+            document.getElementById('editRewardName').value = reward.name;
+            document.getElementById('editRewardPoints').value = reward.points;
+            document.getElementById('editRewardCategory').value = reward.category;
+            
+            // Show modal
+            const modal = document.getElementById('editRewardModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        // Close edit modal
+        document.getElementById('closeEditModal').addEventListener('click', function() {
+            closeEditRewardModal();
+        });
+
+        document.getElementById('cancelEdit').addEventListener('click', function() {
+            closeEditRewardModal();
+        });
+
+        function closeEditRewardModal() {
+            const modal = document.getElementById('editRewardModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            editingRewardIndex = -1;
+            document.getElementById('editRewardForm').reset();
+        }
+
+        // Edit reward form submission
+        document.getElementById('editRewardForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (editingRewardIndex === -1) return;
+            
+            const name = document.getElementById('editRewardName').value;
+            const points = parseInt(document.getElementById('editRewardPoints').value);
+            const category = document.getElementById('editRewardCategory').value;
+            
+            // Check if new name already exists (excluding current reward)
+            const existingReward = rewardDatabase.find((r, index) => 
+                r.name.toLowerCase() === name.toLowerCase() && index !== editingRewardIndex
+            );
+            
+            if (existingReward) {
+                alert('Nama reward sudah ada! Gunakan nama yang berbeda.');
+                return;
+            }
+            
+            // Update reward
+            rewardDatabase[editingRewardIndex] = {
+                ...rewardDatabase[editingRewardIndex],
+                name: name,
+                points: points,
+                category: category
+            };
+            
+            saveRewardDatabase();
+            renderRewardDatabase();
+            updateRewardStatistics();
+            populateRewardDropdown(); // Update dropdown when reward is edited
+            closeEditRewardModal();
+            alert('Jenis reward berhasil diperbarui!');
+        });
+
+        // Populate reward dropdown from database
+        function populateRewardDropdown() {
+            const rewardSelect = document.getElementById('rewardType');
+            
+            // Clear existing options except the first one
+            rewardSelect.innerHTML = '<option value="">Pilih Jenis</option>';
+            
+            // Sort rewards by category and name
+            const sortedRewards = [...rewardDatabase].sort((a, b) => {
+                if (a.category !== b.category) {
+                    return a.category.localeCompare(b.category);
+                }
+                return a.name.localeCompare(b.name);
+            });
+            
+            // Add rewards to dropdown
+            sortedRewards.forEach(reward => {
+                const option = document.createElement('option');
+                option.value = reward.name;
+                option.textContent = `${reward.name} (${reward.points > 0 ? '+' : ''}${reward.points})`;
+                option.dataset.points = reward.points;
+                rewardSelect.appendChild(option);
+            });
+        }
+
+        // Auto-select category based on points
+        document.getElementById('rewardTypePoints').addEventListener('input', function() {
+            const points = parseInt(this.value);
+            const categorySelect = document.getElementById('rewardTypeCategory');
+            
+            if (!isNaN(points)) {
+                if (points < 0) {
+                    categorySelect.value = 'Bobot';
+                } else if (points > 0) {
+                    categorySelect.value = 'Reward';
+                } else {
+                    categorySelect.value = '';
+                }
+            }
+        });
+
+        // Auto-select category for edit form based on points
+        document.getElementById('editRewardPoints').addEventListener('input', function() {
+            const points = parseInt(this.value);
+            const categorySelect = document.getElementById('editRewardCategory');
+            
+            if (!isNaN(points)) {
+                if (points < 0) {
+                    categorySelect.value = 'Bobot';
+                } else if (points > 0) {
+                    categorySelect.value = 'Reward';
+                } else {
+                    categorySelect.value = '';
+                }
+            }
+        });
+
+        // Reward Type Form
+        document.getElementById('rewardTypeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('rewardTypeName').value;
+            const points = parseInt(document.getElementById('rewardTypePoints').value);
+            const category = document.getElementById('rewardTypeCategory').value;
+            
+            // Check if reward name already exists
+            if (rewardDatabase.find(r => r.name.toLowerCase() === name.toLowerCase())) {
+                alert('Nama reward sudah ada! Gunakan nama yang berbeda.');
+                return;
+            }
+            
+            rewardDatabase.push({
+                name: name,
+                points: points,
+                category: category,
+                createdDate: new Date().toLocaleDateString('id-ID')
+            });
+            
+            saveRewardDatabase();
+            renderRewardDatabase();
+            updateRewardStatistics();
+            populateRewardDropdown(); // Update dropdown when new reward is added
+            this.reset();
+            alert('Jenis reward berhasil ditambahkan!');
+        });
+
+        // Reward database search and filter
+        document.getElementById('rewardSearchInput').addEventListener('input', renderRewardDatabase);
+        document.getElementById('rewardCategoryFilter').addEventListener('change', renderRewardDatabase);
+
+        // Reward database export
+        document.getElementById('rewardExportBtn').addEventListener('click', function() {
+            const csvContent = generateRewardDatabaseCSV();
+            downloadCSV(csvContent, 'database_reward.csv');
+        });
+
+        function saveRewardDatabase() {
+            localStorage.setItem('rewardDatabase', JSON.stringify(rewardDatabase));
+        }
+
+        function renderRewardDatabase() {
+            const searchTerm = document.getElementById('rewardSearchInput').value.toLowerCase();
+            const categoryFilter = document.getElementById('rewardCategoryFilter').value;
+            
+            let filteredRewards = rewardDatabase.filter(reward => {
+                const matchesSearch = reward.name.toLowerCase().includes(searchTerm);
+                const matchesCategory = !categoryFilter || reward.category === categoryFilter;
+                return matchesSearch && matchesCategory;
+            });
+
+            // Sort by category then by name
+            filteredRewards.sort((a, b) => {
+                if (a.category !== b.category) {
+                    return a.category.localeCompare(b.category);
+                }
+                return a.name.localeCompare(b.name);
+            });
+
+            const tbody = document.getElementById('rewardDbTableBody');
+            const emptyState = document.getElementById('rewardEmptyState');
+            
+            if (filteredRewards.length === 0) {
+                tbody.innerHTML = '';
+                tbody.appendChild(emptyState);
+                return;
+            }
+
+            tbody.innerHTML = '';
+            
+            filteredRewards.forEach((reward, index) => {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-50';
+                
+                const pointsClass = reward.points >= 0 ? 'text-green-600 bg-green-100' : 'text-red-600 bg-red-100';
+                
+                const categoryColors = {
+                    'Reward': 'bg-green-100 text-green-800',
+                    'Bobot': 'bg-orange-100 text-orange-800'
+                };
+                
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${index + 1}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-medium text-gray-900">${reward.name}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-3 py-1 text-sm font-semibold rounded-full ${pointsClass}">${reward.points > 0 ? '+' : ''}${reward.points}</span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 py-1 text-xs font-medium ${categoryColors[reward.category]} rounded-full">${reward.category}</span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${reward.createdDate}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <button onclick="editRewardDb(${rewardDatabase.indexOf(reward)})" class="text-blue-600 hover:text-blue-900 mr-3">Edit</button>
+                        <button onclick="deleteRewardDb(${filteredRewards.indexOf(reward)})" class="text-red-600 hover:text-red-900">Hapus</button>
+                    </td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+
+        function updateRewardStatistics() {
+            const totalRewards = rewardDatabase.length;
+            const positiveRewards = rewardDatabase.filter(r => r.points > 0).length;
+            const negativeRewards = rewardDatabase.filter(r => r.points < 0).length;
+
+            document.getElementById('totalRewardTypes').textContent = totalRewards;
+            document.getElementById('positiveRewards').textContent = positiveRewards;
+            document.getElementById('negativeRewards').textContent = negativeRewards;
+        }
+
+
+
+        function deleteRewardDb(filteredIndex) {
+            if (confirm('Apakah Anda yakin ingin menghapus jenis reward ini?')) {
+                const searchTerm = document.getElementById('rewardSearchInput').value.toLowerCase();
+                const categoryFilter = document.getElementById('rewardCategoryFilter').value;
+                
+                let filteredRewards = rewardDatabase.filter(reward => {
+                    const matchesSearch = reward.name.toLowerCase().includes(searchTerm);
+                    const matchesCategory = !categoryFilter || reward.category === categoryFilter;
+                    return matchesSearch && matchesCategory;
+                });
+
+                // Sort by category then by name (same as in renderRewardDatabase)
+                filteredRewards.sort((a, b) => {
+                    if (a.category !== b.category) {
+                        return a.category.localeCompare(b.category);
+                    }
+                    return a.name.localeCompare(b.name);
+                });
+
+                const rewardToDelete = filteredRewards[filteredIndex];
+                const actualIndex = rewardDatabase.findIndex(r => r.name === rewardToDelete.name && r.points === rewardToDelete.points);
+                
+                if (actualIndex !== -1) {
+                    rewardDatabase.splice(actualIndex, 1);
+                    saveRewardDatabase();
+                    renderRewardDatabase();
+                    updateRewardStatistics();
+                    populateRewardDropdown(); // Update dropdown when reward is deleted
+                }
+            }
+        }
+
+        function generateRewardDatabaseCSV() {
+            let csv = 'No,Nama Reward,Bobot Poin,Kategori,Tanggal Dibuat\n';
+            rewardDatabase.forEach((reward, index) => {
+                csv += `${index + 1},"${reward.name}",${reward.points},"${reward.category}","${reward.createdDate}"\n`;
+            });
+            return csv;
+        }
+
+        // Analytics Functions
+        function renderAnalytics() {
+            updateAnalyticsOverview();
+            renderTopStudentsChart();
+            renderClassPerformanceChart();
+            renderRewardDistributionChart();
+            renderMonthlyTrendChart();
+            renderProblemStudentsTable();
+            renderAchievementSummary();
+        }
+
+        function updateAnalyticsOverview() {
+            // Total transactions
+            const totalTransactions = students.reduce((sum, student) => sum + student.rewards.length, 0);
+            document.getElementById('totalTransactions').textContent = totalTransactions;
+
+            // Top students (with positive points)
+            const topStudents = students.filter(s => s.totalPoints > 0).length;
+            document.getElementById('topStudentCount').textContent = topStudents;
+
+            // Best class
+            const classStats = {};
+            students.forEach(student => {
+                if (!classStats[student.class]) {
+                    classStats[student.class] = { total: 0, count: 0 };
+                }
+                classStats[student.class].total += student.totalPoints;
+                classStats[student.class].count += 1;
+            });
+
+            let bestClass = '-';
+            let bestAverage = -Infinity;
+            Object.keys(classStats).forEach(className => {
+                const average = classStats[className].total / classStats[className].count;
+                if (average > bestAverage) {
+                    bestAverage = average;
+                    bestClass = className;
+                }
+            });
+            document.getElementById('topClassName').textContent = bestClass;
+
+            // Most popular reward
+            const rewardCounts = {};
+            students.forEach(student => {
+                student.rewards.forEach(reward => {
+                    rewardCounts[reward.type] = (rewardCounts[reward.type] || 0) + 1;
+                });
+            });
+
+            let popularReward = '-';
+            let maxCount = 0;
+            Object.keys(rewardCounts).forEach(rewardType => {
+                if (rewardCounts[rewardType] > maxCount) {
+                    maxCount = rewardCounts[rewardType];
+                    popularReward = rewardType;
+                }
+            });
+            document.getElementById('popularReward').textContent = popularReward;
+        }
+
+        function renderTopStudentsChart() {
+            const topStudents = [...students]
+                .sort((a, b) => b.totalPoints - a.totalPoints)
+                .slice(0, 10);
+
+            const chartContainer = document.getElementById('topStudentsChart');
+            
+            if (topStudents.length === 0) {
+                chartContainer.innerHTML = '<p class="text-gray-500 text-center py-8">Belum ada data siswa</p>';
+                return;
+            }
+
+            const maxPoints = Math.max(...topStudents.map(s => s.totalPoints));
+            
+            chartContainer.innerHTML = topStudents.map((student, index) => {
+                const percentage = maxPoints > 0 ? (student.totalPoints / maxPoints) * 100 : 0;
+                const barColor = student.totalPoints >= 0 ? 'bg-green-500' : 'bg-red-500';
+                const textColor = student.totalPoints >= 0 ? 'text-green-600' : 'text-red-600';
+                
+                return `
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 text-sm font-medium text-gray-600">${index + 1}</div>
+                        <div class="flex-1">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-sm font-medium text-gray-800">${student.name}</span>
+                                <span class="text-sm font-semibold ${textColor}">${student.totalPoints}</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="${barColor} h-2 rounded-full transition-all duration-500" style="width: ${Math.abs(percentage)}%"></div>
+                            </div>
+                            <div class="text-xs text-gray-500 mt-1">${student.class}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderClassPerformanceChart() {
+            const classStats = {};
+            students.forEach(student => {
+                if (!classStats[student.class]) {
+                    classStats[student.class] = { total: 0, count: 0 };
+                }
+                classStats[student.class].total += student.totalPoints;
+                classStats[student.class].count += 1;
+            });
+
+            const classData = Object.keys(classStats).map(className => ({
+                class: className,
+                average: classStats[className].total / classStats[className].count,
+                count: classStats[className].count
+            })).sort((a, b) => b.average - a.average);
+
+            const chartContainer = document.getElementById('classPerformanceChart');
+            
+            if (classData.length === 0) {
+                chartContainer.innerHTML = '<p class="text-gray-500 text-center py-8">Belum ada data kelas</p>';
+                return;
+            }
+
+            const maxAverage = Math.max(...classData.map(c => Math.abs(c.average)));
+            
+            chartContainer.innerHTML = classData.map((classInfo, index) => {
+                const percentage = maxAverage > 0 ? (Math.abs(classInfo.average) / maxAverage) * 100 : 0;
+                const barColor = classInfo.average >= 0 ? 'bg-blue-500' : 'bg-red-500';
+                const textColor = classInfo.average >= 0 ? 'text-blue-600' : 'text-red-600';
+                
+                return `
+                    <div class="flex items-center space-x-3">
+                        <div class="w-16 text-sm font-medium text-gray-800">${classInfo.class}</div>
+                        <div class="flex-1">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-sm text-gray-600">${classInfo.count} siswa</span>
+                                <span class="text-sm font-semibold ${textColor}">${classInfo.average.toFixed(1)}</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="${barColor} h-2 rounded-full transition-all duration-500" style="width: ${percentage}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderRewardDistributionChart() {
+            const rewardCounts = {};
+            students.forEach(student => {
+                student.rewards.forEach(reward => {
+                    rewardCounts[reward.type] = (rewardCounts[reward.type] || 0) + 1;
+                });
+            });
+
+            const rewardData = Object.keys(rewardCounts)
+                .map(type => ({ type, count: rewardCounts[type] }))
+                .sort((a, b) => b.count - a.count)
+                .slice(0, 8);
+
+            const chartContainer = document.getElementById('rewardDistributionChart');
+            
+            if (rewardData.length === 0) {
+                chartContainer.innerHTML = '<p class="text-gray-500 text-center py-8">Belum ada data reward</p>';
+                return;
+            }
+
+            const maxCount = Math.max(...rewardData.map(r => r.count));
+            const colors = ['bg-purple-500', 'bg-blue-500', 'bg-green-500', 'bg-yellow-500', 'bg-red-500', 'bg-indigo-500', 'bg-pink-500', 'bg-gray-500'];
+            
+            chartContainer.innerHTML = rewardData.map((reward, index) => {
+                const percentage = (reward.count / maxCount) * 100;
+                const color = colors[index % colors.length];
+                
+                return `
+                    <div class="flex items-center space-x-3">
+                        <div class="w-4 h-4 ${color} rounded"></div>
+                        <div class="flex-1">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-sm font-medium text-gray-800">${reward.type}</span>
+                                <span class="text-sm font-semibold text-gray-600">${reward.count}</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="${color} h-2 rounded-full transition-all duration-500" style="width: ${percentage}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderMonthlyTrendChart() {
+            const monthlyData = {};
+            students.forEach(student => {
+                student.rewards.forEach(reward => {
+                    const date = new Date(reward.date.split('/').reverse().join('-'));
+                    const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+                    
+                    if (!monthlyData[monthKey]) {
+                        monthlyData[monthKey] = { positive: 0, negative: 0, total: 0 };
+                    }
+                    
+                    if (reward.points > 0) {
+                        monthlyData[monthKey].positive += reward.points;
+                    } else {
+                        monthlyData[monthKey].negative += Math.abs(reward.points);
+                    }
+                    monthlyData[monthKey].total += reward.points;
+                });
+            });
+
+            const sortedMonths = Object.keys(monthlyData).sort().slice(-6);
+            const chartContainer = document.getElementById('monthlyTrendChart');
+            
+            if (sortedMonths.length === 0) {
+                chartContainer.innerHTML = '<p class="text-gray-500 text-center py-8">Belum ada data bulanan</p>';
+                return;
+            }
+
+            const maxValue = Math.max(...sortedMonths.map(month => 
+                Math.max(monthlyData[month].positive, monthlyData[month].negative)
+            ));
+            
+            chartContainer.innerHTML = sortedMonths.map(month => {
+                const data = monthlyData[month];
+                const monthName = new Date(month + '-01').toLocaleDateString('id-ID', { month: 'short', year: 'numeric' });
+                const positivePercentage = maxValue > 0 ? (data.positive / maxValue) * 100 : 0;
+                const negativePercentage = maxValue > 0 ? (data.negative / maxValue) * 100 : 0;
+                
+                return `
+                    <div class="space-y-2">
+                        <div class="text-sm font-medium text-gray-800">${monthName}</div>
+                        <div class="space-y-1">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-12 text-xs text-green-600">+${data.positive}</div>
+                                <div class="flex-1 bg-gray-200 rounded-full h-2">
+                                    <div class="bg-green-500 h-2 rounded-full transition-all duration-500" style="width: ${positivePercentage}%"></div>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-12 text-xs text-red-600">-${data.negative}</div>
+                                <div class="flex-1 bg-gray-200 rounded-full h-2">
+                                    <div class="bg-red-500 h-2 rounded-full transition-all duration-500" style="width: ${negativePercentage}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderProblemStudentsTable() {
+            const problemStudents = students
+                .filter(student => student.totalPoints < 0)
+                .sort((a, b) => a.totalPoints - b.totalPoints)
+                .slice(0, 10);
+
+            const tableBody = document.getElementById('problemStudentsTable');
+            
+            if (problemStudents.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="3" class="px-4 py-8 text-center text-gray-500">Tidak ada siswa yang perlu perhatian khusus</td></tr>';
+                return;
+            }
+
+            tableBody.innerHTML = problemStudents.map(student => `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-4 py-3 text-sm font-medium text-gray-900">${student.name}</td>
+                    <td class="px-4 py-3 text-sm text-gray-600">
+                        <span class="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">${student.class}</span>
+                    </td>
+                    <td class="px-4 py-3 text-sm">
+                        <span class="px-2 py-1 text-xs font-semibold bg-red-100 text-red-800 rounded-full">${student.totalPoints}</span>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderAchievementSummary() {
+            const achievements = {
+                'Prestasi Akademik': 0,
+                'Prestasi Olahraga': 0,
+                'Prestasi Seni': 0,
+                'Kedisiplinan': 0,
+                'Kebersihan': 0
+            };
+
+            students.forEach(student => {
+                student.rewards.forEach(reward => {
+                    if (achievements.hasOwnProperty(reward.type) && reward.points > 0) {
+                        achievements[reward.type]++;
+                    }
+                });
+            });
+
+            const summaryContainer = document.getElementById('achievementSummary');
+            const colors = {
+                'Prestasi Akademik': 'bg-blue-100 text-blue-800',
+                'Prestasi Olahraga': 'bg-green-100 text-green-800',
+                'Prestasi Seni': 'bg-purple-100 text-purple-800',
+                'Kedisiplinan': 'bg-yellow-100 text-yellow-800',
+                'Kebersihan': 'bg-teal-100 text-teal-800'
+            };
+
+            summaryContainer.innerHTML = Object.keys(achievements).map(achievement => `
+                <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                    <span class="text-sm font-medium text-gray-700">${achievement}</span>
+                    <span class="px-3 py-1 text-sm font-semibold ${colors[achievement]} rounded-full">
+                        ${achievements[achievement]}
+                    </span>
+                </div>
+            `).join('');
+        }
+
+        // Reports Page Functions
+        function initializeReportsPage() {
+            // Set default date range (last 30 days)
+            const today = new Date();
+            const thirtyDaysAgo = new Date(today.getTime() - (30 * 24 * 60 * 60 * 1000));
+            
+            document.getElementById('reportDateFrom').value = thirtyDaysAgo.toISOString().split('T')[0];
+            document.getElementById('reportDateTo').value = today.toISOString().split('T')[0];
+            
+            // Add event listeners
+            document.getElementById('printReportBtn').addEventListener('click', printReport);
+            document.getElementById('exportPdfBtn').addEventListener('click', exportReportToPDF);
+            document.getElementById('clearFiltersBtn').addEventListener('click', clearReportFilters);
+        }
+
+        function clearReportFilters() {
+            document.getElementById('reportClassFilter').value = '';
+            
+            // Reset to default date range (last 30 days)
+            const today = new Date();
+            const thirtyDaysAgo = new Date(today.getTime() - (30 * 24 * 60 * 60 * 1000));
+            
+            document.getElementById('reportDateFrom').value = thirtyDaysAgo.toISOString().split('T')[0];
+            document.getElementById('reportDateTo').value = today.toISOString().split('T')[0];
+        }
+
+        function getReportFilters() {
+            const classFilter = document.getElementById('reportClassFilter').value;
+            const dateFrom = document.getElementById('reportDateFrom').value;
+            const dateTo = document.getElementById('reportDateTo').value;
+            
+            return { classFilter, dateFrom, dateTo };
+        }
+
+        function generateQuickReport(period) {
+            const today = new Date();
+            let dateFrom, dateTo = today;
+            let reportTitle = '';
+            
+            switch(period) {
+                case 'weekly':
+                    dateFrom = new Date(today.getTime() - (7 * 24 * 60 * 60 * 1000));
+                    reportTitle = 'Laporan Mingguan (7 Hari Terakhir)';
+                    break;
+                case 'monthly':
+                    dateFrom = new Date(today.getTime() - (30 * 24 * 60 * 60 * 1000));
+                    reportTitle = 'Laporan Bulanan (30 Hari Terakhir)';
+                    break;
+                case 'semester':
+                    dateFrom = new Date(today.getTime() - (180 * 24 * 60 * 60 * 1000));
+                    reportTitle = 'Laporan Semester (6 Bulan Terakhir)';
+                    break;
+            }
+            
+            // Get current filters
+            const filters = getReportFilters();
+            
+            // Override dates for quick reports but keep class filter
+            const reportData = generateStudentSummaryReport(
+                filters.classFilter, 
+                dateFrom.toISOString().split('T')[0], 
+                dateTo.toISOString().split('T')[0]
+            );
+            
+            // Add filter info to title
+            let titleSuffix = '';
+            if (filters.classFilter) {
+                titleSuffix += ` - Kelas ${filters.classFilter}`;
+            }
+            
+            displayReport(reportTitle + titleSuffix, reportData);
+        }
+
+        function generateTemplateReport(template) {
+            const filters = getReportFilters();
+            let reportData = {};
+            let reportTitle = '';
+            
+            switch(template) {
+                case 'achievement':
+                    reportData = generateAchievementReport(filters.classFilter, filters.dateFrom, filters.dateTo);
+                    reportTitle = 'Laporan Prestasi Siswa';
+                    break;
+                case 'violation':
+                    reportData = generateViolationReport(filters.classFilter, filters.dateFrom, filters.dateTo);
+                    reportTitle = 'Laporan Pelanggaran Siswa';
+                    break;
+                case 'class-ranking':
+                    reportData = generateClassRankingReport(filters.classFilter, filters.dateFrom, filters.dateTo);
+                    reportTitle = 'Laporan Ranking Kelas';
+                    break;
+                case 'comprehensive':
+                    reportData = generateComprehensiveReport(filters.classFilter, filters.dateFrom, filters.dateTo);
+                    reportTitle = 'Laporan Komprehensif';
+                    break;
+            }
+            
+            // Add filter info to title
+            let titleSuffix = '';
+            if (filters.classFilter) {
+                titleSuffix += ` - Kelas ${filters.classFilter}`;
+            }
+            if (filters.dateFrom && filters.dateTo) {
+                const fromDate = new Date(filters.dateFrom).toLocaleDateString('id-ID');
+                const toDate = new Date(filters.dateTo).toLocaleDateString('id-ID');
+                titleSuffix += ` (${fromDate} - ${toDate})`;
+            }
+            
+            displayReport(reportTitle + titleSuffix, reportData);
+        }
+
+        function filterStudentsByDateRange(studentList, dateFrom, dateTo) {
+            if (!dateFrom && !dateTo) return studentList;
+            
+            return studentList.map(student => {
+                const filteredRewards = student.rewards.filter(reward => {
+                    if (!dateFrom && !dateTo) return true;
+                    
+                    // Parse Indonesian date format (dd/mm/yyyy)
+                    const rewardDateParts = reward.date.split('/');
+                    const rewardDate = new Date(rewardDateParts[2], rewardDateParts[1] - 1, rewardDateParts[0]);
+                    
+                    const fromDate = dateFrom ? new Date(dateFrom) : new Date('1900-01-01');
+                    const toDate = dateTo ? new Date(dateTo) : new Date('2100-12-31');
+                    
+                    return rewardDate >= fromDate && rewardDate <= toDate;
+                });
+                
+                const totalPoints = filteredRewards.reduce((sum, reward) => sum + reward.points, 0);
+                
+                return {
+                    ...student,
+                    rewards: filteredRewards,
+                    totalPoints: totalPoints
+                };
+            }).filter(student => student.rewards.length > 0 || !dateFrom); // Include students with no rewards only if no date filter
+        }
+
+        function generateStudentSummaryReport(classFilter, dateFrom, dateTo) {
+            let filteredStudents = students;
+            
+            // Apply class filter
+            if (classFilter) {
+                filteredStudents = filteredStudents.filter(s => s.class === classFilter);
+            }
+            
+            // Apply date filter
+            filteredStudents = filterStudentsByDateRange(filteredStudents, dateFrom, dateTo);
+            
+            // Sort by total points descending
+            filteredStudents.sort((a, b) => b.totalPoints - a.totalPoints);
+            
+            return {
+                type: 'table',
+                headers: ['No', 'Nama Siswa', 'Kelas', 'Total Poin', 'Jumlah Reward'],
+                data: filteredStudents.map((student, index) => [
+                    index + 1,
+                    student.name,
+                    student.class,
+                    student.totalPoints,
+                    student.rewards.length
+                ]),
+                summary: {
+                    totalStudents: filteredStudents.length,
+                    averagePoints: filteredStudents.length > 0 ? Math.round(filteredStudents.reduce((sum, s) => sum + s.totalPoints, 0) / filteredStudents.length) : 0,
+                    topStudent: filteredStudents.length > 0 ? filteredStudents[0].name : '-'
+                }
+            };
+        }
+
+        function generateAchievementReport(classFilter, dateFrom, dateTo) {
+            let filteredStudents = students;
+            
+            // Apply class filter
+            if (classFilter) {
+                filteredStudents = filteredStudents.filter(s => s.class === classFilter);
+            }
+            
+            // Apply date filter
+            filteredStudents = filterStudentsByDateRange(filteredStudents, dateFrom, dateTo);
+            
+            const achievementStudents = filteredStudents.filter(s => s.totalPoints > 0).sort((a, b) => b.totalPoints - a.totalPoints);
+            
+            return {
+                type: 'table',
+                headers: ['Peringkat', 'Nama Siswa', 'Kelas', 'Total Poin', 'Prestasi Tertinggi'],
+                data: achievementStudents.map((student, index) => {
+                    const highestReward = student.rewards.reduce((max, reward) => 
+                        reward.points > max.points ? reward : max, { points: 0, type: '-' });
+                    
+                    return [
+                        index + 1,
+                        student.name,
+                        student.class,
+                        student.totalPoints,
+                        highestReward.type
+                    ];
+                }),
+                summary: {
+                    totalAchievers: achievementStudents.length,
+                    averagePoints: achievementStudents.length > 0 ? Math.round(achievementStudents.reduce((sum, s) => sum + s.totalPoints, 0) / achievementStudents.length) : 0,
+                    champion: achievementStudents.length > 0 ? achievementStudents[0].name : '-'
+                }
+            };
+        }
+
+        function generateViolationReport(classFilter, dateFrom, dateTo) {
+            let filteredStudents = students;
+            
+            // Apply class filter
+            if (classFilter) {
+                filteredStudents = filteredStudents.filter(s => s.class === classFilter);
+            }
+            
+            // Apply date filter
+            filteredStudents = filterStudentsByDateRange(filteredStudents, dateFrom, dateTo);
+            
+            const violationStudents = filteredStudents.filter(s => s.totalPoints < 0).sort((a, b) => a.totalPoints - b.totalPoints);
+            
+            return {
+                type: 'table',
+                headers: ['No', 'Nama Siswa', 'Kelas', 'Total Poin', 'Jumlah Pelanggaran'],
+                data: violationStudents.map((student, index) => {
+                    const violationCount = student.rewards.filter(r => r.points < 0).length;
+                    
+                    return [
+                        index + 1,
+                        student.name,
+                        student.class,
+                        student.totalPoints,
+                        violationCount
+                    ];
+                }),
+                summary: {
+                    totalViolators: violationStudents.length,
+                    averageNegativePoints: violationStudents.length > 0 ? Math.round(violationStudents.reduce((sum, s) => sum + s.totalPoints, 0) / violationStudents.length) : 0,
+                    mostViolations: violationStudents.length > 0 ? violationStudents[0].name : '-'
+                }
+            };
+        }
+
+        function generateClassRankingReport(classFilter, dateFrom, dateTo) {
+            let filteredStudents = students;
+            
+            // Apply date filter first
+            filteredStudents = filterStudentsByDateRange(filteredStudents, dateFrom, dateTo);
+            
+            const classStats = {};
+            filteredStudents.forEach(student => {
+                if (!classStats[student.class]) {
+                    classStats[student.class] = { total: 0, count: 0, students: [] };
+                }
+                classStats[student.class].total += student.totalPoints;
+                classStats[student.class].count += 1;
+                classStats[student.class].students.push(student);
+            });
+
+            let classRanking = Object.keys(classStats).map(className => ({
+                class: className,
+                average: classStats[className].total / classStats[className].count,
+                totalPoints: classStats[className].total,
+                studentCount: classStats[className].count
+            })).sort((a, b) => b.average - a.average);
+            
+            // Apply class filter after calculating all classes (for comparison)
+            if (classFilter) {
+                classRanking = classRanking.filter(c => c.class === classFilter);
+            }
+
+            return {
+                type: 'table',
+                headers: ['Peringkat', 'Kelas', 'Jumlah Siswa', 'Total Poin', 'Rata-rata Poin'],
+                data: classRanking.map((classInfo, index) => [
+                    index + 1,
+                    classInfo.class,
+                    classInfo.studentCount,
+                    classInfo.totalPoints,
+                    classInfo.average.toFixed(1)
+                ]),
+                summary: {
+                    totalClasses: classRanking.length,
+                    bestClass: classRanking.length > 0 ? classRanking[0].class : '-',
+                    overallAverage: classRanking.length > 0 ? (classRanking.reduce((sum, c) => sum + c.average, 0) / classRanking.length).toFixed(1) : 0
+                }
+            };
+        }
+
+        function generateComprehensiveReport(classFilter, dateFrom, dateTo) {
+            let filteredStudents = students;
+            
+            // Apply class filter
+            if (classFilter) {
+                filteredStudents = filteredStudents.filter(s => s.class === classFilter);
+            }
+            
+            // Apply date filter
+            filteredStudents = filterStudentsByDateRange(filteredStudents, dateFrom, dateTo);
+            
+            // Sort by total points descending
+            filteredStudents.sort((a, b) => b.totalPoints - a.totalPoints);
+            
+            // Get top 10 and bottom 5
+            const topStudents = filteredStudents.slice(0, 10);
+            const bottomStudents = filteredStudents.filter(s => s.totalPoints < 0).slice(0, 5);
+            
+            const allStudents = [...topStudents];
+            if (bottomStudents.length > 0) {
+                allStudents.push({ name: '--- SISWA PERLU PERHATIAN ---', class: '', totalPoints: '', rewards: [] });
+                allStudents.push(...bottomStudents);
+            }
+            
+            return {
+                type: 'table',
+                headers: ['No', 'Nama Siswa', 'Kelas', 'Total Poin', 'Jumlah Reward'],
+                data: allStudents.map((student, index) => [
+                    student.name.includes('---') ? '' : index + 1,
+                    student.name,
+                    student.class,
+                    student.totalPoints,
+                    Array.isArray(student.rewards) ? student.rewards.length : ''
+                ]),
+                summary: {
+                    totalStudents: filteredStudents.length,
+                    averagePoints: filteredStudents.length > 0 ? Math.round(filteredStudents.reduce((sum, s) => sum + s.totalPoints, 0) / filteredStudents.length) : 0,
+                    topStudent: filteredStudents.length > 0 ? filteredStudents[0].name : '-',
+                    problemStudents: bottomStudents.length
+                }
+            };
+        }
+
+        function displayReport(title, data) {
+            const reportArea = document.getElementById('reportDisplayArea');
+            const reportTitle = document.getElementById('reportTitle');
+            const reportContent = document.getElementById('reportContent');
+            const reportTime = document.getElementById('reportGeneratedTime');
+            
+            reportTitle.textContent = title;
+            reportTime.textContent = `Dibuat pada: ${new Date().toLocaleString('id-ID')}`;
+            
+            let contentHTML = '';
+            
+            if (data.type === 'table') {
+                contentHTML = `
+                    <div class="overflow-x-auto">
+                        <table class="w-full border-collapse border border-gray-300">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    ${data.headers.map(header => `<th class="border border-gray-300 px-4 py-2 text-left font-medium text-gray-700">${header}</th>`).join('')}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${data.data.map(row => `
+                                    <tr class="hover:bg-gray-50">
+                                        ${row.map(cell => `<td class="border border-gray-300 px-4 py-2 text-sm">${cell}</td>`).join('')}
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+                
+                if (data.summary) {
+                    contentHTML += `
+                        <div class="mt-6 bg-gray-50 rounded-lg p-4">
+                            <h4 class="font-semibold text-gray-800 mb-3">Ringkasan:</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                                ${Object.keys(data.summary).map(key => `
+                                    <div>
+                                        <span class="font-medium text-gray-600">${key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}:</span>
+                                        <span class="ml-2 font-semibold text-gray-800">${data.summary[key]}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+            
+            reportContent.innerHTML = contentHTML;
+            reportArea.classList.remove('hidden');
+            
+            // Scroll to report
+            reportArea.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function printReport() {
+            const reportArea = document.getElementById('reportDisplayArea');
+            if (reportArea.classList.contains('hidden')) {
+                alert('Silakan generate laporan terlebih dahulu!');
+                return;
+            }
+            
+            const printWindow = window.open('', '_blank');
+            const reportTitle = document.getElementById('reportTitle').textContent;
+            const reportContent = document.getElementById('reportContent').innerHTML;
+            const reportTime = document.getElementById('reportGeneratedTime').textContent;
+            
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>${reportTitle}</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 20px; }
+                        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+                        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+                        th { background-color: #f5f5f5; font-weight: bold; }
+                        .header { text-align: center; margin-bottom: 30px; }
+                        .summary { background-color: #f9f9f9; padding: 15px; margin-top: 20px; border-radius: 5px; }
+                        @media print { body { margin: 0; } }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>SMAN 1 Angkinang</h1>
+                        <h2>${reportTitle}</h2>
+                        <p>${reportTime}</p>
+                    </div>
+                    ${reportContent}
+                </body>
+                </html>
+            `);
+            
+            printWindow.document.close();
+            printWindow.print();
+        }
+
+        function exportReportToPDF() {
+            const reportArea = document.getElementById('reportDisplayArea');
+            if (reportArea.classList.contains('hidden')) {
+                alert('Silakan generate laporan terlebih dahulu!');
+                return;
+            }
+
+            const reportTitle = document.getElementById('reportTitle').textContent;
+            const reportTime = document.getElementById('reportGeneratedTime').textContent;
+            
+            // Get table data
+            const table = document.querySelector('#reportContent table');
+            if (!table) {
+                alert('Tidak ada data tabel untuk diekspor!');
+                return;
+            }
+
+            // Initialize jsPDF
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('p', 'mm', 'a4');
+            
+            // Set font
+            doc.setFont('helvetica');
+            
+            // Add header
+            doc.setFontSize(16);
+            doc.setFont('helvetica', 'bold');
+            doc.text('SMAN 1 Angkinang', 105, 20, { align: 'center' });
+            
+            doc.setFontSize(14);
+            doc.text(reportTitle, 105, 30, { align: 'center' });
+            
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'normal');
+            doc.text(reportTime, 105, 40, { align: 'center' });
+            
+            // Extract table headers
+            const headers = [];
+            const headerCells = table.querySelectorAll('thead th');
+            headerCells.forEach(cell => {
+                headers.push(cell.textContent.trim());
+            });
+            
+            // Extract table data
+            const data = [];
+            const rows = table.querySelectorAll('tbody tr');
+            rows.forEach(row => {
+                const rowData = [];
+                const cells = row.querySelectorAll('td');
+                cells.forEach(cell => {
+                    rowData.push(cell.textContent.trim());
+                });
+                if (rowData.length > 0) {
+                    data.push(rowData);
+                }
+            });
+            
+            // Add table using autoTable plugin
+            doc.autoTable({
+                head: [headers],
+                body: data,
+                startY: 50,
+                styles: {
+                    fontSize: 8,
+                    cellPadding: 3,
+                    overflow: 'linebreak',
+                    halign: 'left'
+                },
+                headStyles: {
+                    fillColor: [66, 139, 202],
+                    textColor: 255,
+                    fontStyle: 'bold',
+                    halign: 'center'
+                },
+                alternateRowStyles: {
+                    fillColor: [245, 245, 245]
+                },
+                columnStyles: {
+                    0: { halign: 'center', cellWidth: 15 }, // No column
+                    3: { halign: 'center' }, // Points column
+                    4: { halign: 'center' }  // Count column
+                },
+                margin: { top: 50, left: 14, right: 14 },
+                didDrawPage: function(data) {
+                    // Add page numbers
+                    const pageCount = doc.internal.getNumberOfPages();
+                    const pageSize = doc.internal.pageSize;
+                    const pageHeight = pageSize.height ? pageSize.height : pageSize.getHeight();
+                    
+                    doc.setFontSize(8);
+                    doc.text('Halaman ' + data.pageNumber + ' dari ' + pageCount, 
+                        data.settings.margin.left, pageHeight - 10);
+                }
+            });
+            
+            // Add summary if exists
+            const summaryDiv = document.querySelector('#reportContent .bg-gray-50');
+            if (summaryDiv) {
+                const finalY = doc.lastAutoTable.finalY || 50;
+                
+                doc.setFontSize(12);
+                doc.setFont('helvetica', 'bold');
+                doc.text('Ringkasan:', 14, finalY + 15);
+                
+                doc.setFontSize(10);
+                doc.setFont('helvetica', 'normal');
+                
+                const summaryItems = summaryDiv.querySelectorAll('div > div');
+                let yPosition = finalY + 25;
+                
+                summaryItems.forEach((item, index) => {
+                    const text = item.textContent.trim();
+                    if (text && !text.includes('Ringkasan:')) {
+                        doc.text(text, 14, yPosition);
+                        yPosition += 6;
+                    }
+                });
+            }
+            
+            // Generate filename
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('id-ID').replace(/\//g, '-');
+            const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace(':', '');
+            const filename = `Laporan_${reportTitle.replace(/[^a-zA-Z0-9]/g, '_')}_${dateStr}_${timeStr}.pdf`;
+            
+            // Save the PDF
+            doc.save(filename);
+        }
+
+
+
+        // Function to set current date
+        function setCurrentDate() {
+            const now = new Date();
+            const today = now.toISOString().split('T')[0];
+            
+            document.getElementById('rewardDate').value = today;
+        }
+
+        // Initialize
+        loadSidebarState();
+        renderTable();
+        updateStatistics();
+        updateDatabaseStatistics();
+        updateRewardStatistics();
+        populateStudentDropdown();
+        populateRewardDropdown();
+        renderInputHistory();
+        setCurrentDate(); // Set current date on page load
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96ed420ae6628339',t:'MTc1NTE0MTAxNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
